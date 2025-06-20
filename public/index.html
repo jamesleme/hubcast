@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hubcast.</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Importando a fonte Sen do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Importando ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+    <main class="container">
+        <header class="main-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h1>hubcast<span class="gradient-text">.</span></h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="#" class="active">Home</a></li>
+                        <li><a href="#">Contato</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" title="Alternar tema">
+                    <i id="theme-icon" class="bi bi-lightbulb-fill"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- BANNER (LARGURA TOTAL) -->
+        <section id="live-section-banner">
+            <div class="live-banner">
+            </div>
+        </section>
+
+        <!-- ==== WRAPPER 2 COLUNAS ==== -->
+        <div class="main-content-wrapper">
+
+            <!-- COLUNA PRINCIPAL (ESQUERDA) -->
+            <div class="main-column">
+
+                <!-- SEÇÃO DE CANAIS AO VIVO -->
+                <section id="live-channels-section">
+                    <div class="section-header">
+                        <h2 data-title="ao vivo agora">
+                            <span class="skeleton-title shimmer-bg"></span>
+                        </h2>
+                        <a href="#" class="see-all-btn"><span class="skeleton-button-small shimmer-bg"></span></a>
+                    </div>
+                    <div class="live-list">
+                         <!-- Esqueleto 1 -->
+                         <div class="live-item skeleton-item">
+                            <div class="skeleton-logo shimmer-bg"></div>
+                            <div class="item-info">
+                                <div class="skeleton-text shimmer-bg"></div>
+                                <div class="skeleton-text skeleton-text-short shimmer-bg"></div>
+                            </div>
+                            <div class="skeleton-button shimmer-bg"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção CONCLUIDOS -->
+                <section id="completed-section">
+                    <div class="section-header">
+                        <h2 data-title="episodios concluidos">
+                            <span class="skeleton-title shimmer-bg"></span>
+                        </h2>
+                        <a href="#" class="see-all-btn"><span class="skeleton-button-small shimmer-bg"></span></a>
+                    </div>
+                    <div class="completed-list">
+                        <!-- Esqueleto 1 -->
+                        <div class="completed-item skeleton-item">
+                            <div class="skeleton-logo shimmer-bg"></div>
+                            <div class="item-info">
+                                <div class="skeleton-text shimmer-bg"></div>
+                                <div class="skeleton-text skeleton-text-short shimmer-bg"></div>
+                            </div>
+                            <div class="skeleton-button shimmer-bg"></div>
+                        </div>
+                    </div>
+                </section>                
+
+                <!-- Seção AGENDA -->
+                <section id="upcoming-section">
+                    <div class="section-header">
+                        <h2>proximos episodios</h2>
+                        <a href="#" class="see-all-btn">Ver todos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="upcoming-list">
+                        <!-- Item de Agenda 1 -->
+                        <div class="upcoming-item">
+                            <div class="channel-logo-circle">
+                                <img src="https://pbs.twimg.com/profile_images/1507499149733814272/uXddFNW8_400x400.png" alt="Logo Ciência Sem Fim">
+                            </div>
+                            <div class="item-info">
+                                <h3>AS IDEIAS MAIS IMPORTANTES DO MUNDO #04 [COM ÁLVARO MACHADO DIAS] - Ciência Sem Fim #426</h3>
+                                <p class="channel-name">Ciência Sem Fim</p>
+                            </div>
+                            <div class="item-schedule">
+                                <i class="bi bi-calendar2-check-fill"></i>
+                                <span>HOJE - 20:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Item de Agenda 2 -->
+                        <div class="upcoming-item">
+                            <div class="channel-logo-circle">
+                                <img src="https://pbs.twimg.com/profile_images/1602640183186309122/vqh-AU0D_400x400.jpg" alt="Logo Flow Podcast">
+                            </div>
+                            <div class="item-info">
+                                <h3>ANDERSON DICK e ACF - Flow #457</h3>
+                                <p class="channel-name">Flow Podcast</p>
+                            </div>
+                            <div class="item-schedule">
+                                <i class="bi bi-calendar2-check-fill"></i>
+                                <span>AMANHÃ - 19:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div> <!-- FIM DA COLUNA PRINCIPAL -->
+
+            <!-- COLUNA LATERAL (DIREITA) - SIDEBAR -->
+                <aside class="sidebar-column">
+                        <h2>por categoria</h2>
+                        <section id="categories-section">
+                            <ul class="category-list">
+                                <li><a href="#"><span><i class="fas fa-laugh-beam"></i>Comédia</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="fas fa-newspaper"></i>Notícias</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="fas fa-microchip"></i>Tecnologia</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="fas fa-flask"></i>Ciência</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="fas fa-futbol"></i>Esportes</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="bi bi-dpad-fill"></i>Entretenimento</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                                <li><a href="#"><span><i class="fas fa-briefcase"></i>Negócios</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
+                            </ul>
+                        </section>
+
+                        <!-- Seção PODCASTS POPULARES -->
+                        <section id="popular-section">
+                            <h2>podcasts populares</h2>
+                            <div class="popular-grid">
+                                <!-- Itens do grid aqui... -->
+                                <a href="#" class="popular-card"><div class="logo-circle"><img src="https://i.pravatar.cc/80?u=flow" alt="Logo Flow Podcast"></div><span class="podcast-name">Flow Podcast</span></a>
+                                <a href="#" class="popular-card"><div class="logo-circle"><img src="https://i.pravatar.cc/80?u=podpah" alt="Logo Podpah"></div><span class="podcast-name">Podpah</span></a>
+                                <a href="#" class="popular-card"><div class="logo-circle"><img src="https://i.pravatar.cc/80?u=nerdcast" alt="Logo Nerdcast"></div><span class="podcast-name">Nerdcast</span></a>
+                                <a href="#" class="popular-card"><div class="logo-circle"><img src="https://i.pravatar.cc/80?u=venus" alt="Logo Venus"></div><span class="podcast-name">Venus</span></a>
+                            </div>
+                        </section>
+
+                        <!-- SEÇÃO PUBLICIDADE LATERAL -->
+                        <section id="live-section-banner">
+                            <h2>publicidade</h2>
+                            <div class="side-ad">
+                            </div>
+                         </section>
+                </aside> <!-- FIM DA SIDEBAR -->
+        </div> <!-- FIM DO WRAPPER -->
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
