@@ -27,9 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ---- LÓGICA DA API DO YOUTUBE ----
-    // SUBSTITUA PELA SUA CHAVE DE API!
-    const YOUTUBE_API_KEY = 'AIzaSyDyirApZh9ms5TCcHzS6wIsEJ846bTEHJc'; 
-
     const MAX_LIVES_TO_SHOW = 3;
     const MAX_COMPLETED_TO_SHOW = 3;
 
@@ -55,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (liveCount >= MAX_LIVES_TO_SHOW) {
                 break;
             }
-            const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.id}&type=video&eventType=live&key=${YOUTUBE_API_KEY}`;
+            const apiUrl = `/functions/get-youtube-data?channelId=${channel.id}&eventType=live`;
             try {
                 const response = await fetch(apiUrl);
                 const data = await response.json();
