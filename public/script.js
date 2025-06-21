@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // SUBSTITUA PELA SUA CHAVE DE API REAL PARA O TESTE
 
     const MAX_LIVES_TO_SHOW = 3;
-    const MAX_COMPLETED_TO_SHOW = 5;
+    const MAX_COMPLETED_TO_SHOW = 3;
 
     const channelsToTrack = [
         { id: 'UC4_bL9_p3s01K_T1aG8m1dA', name: 'Podpah', logo: 'https://i.pravatar.cc/80?u=podpah' },
