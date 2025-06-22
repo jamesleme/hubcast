@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ---- LOGICA DO TEMA ----
+    // ---- LÓGICA DO TEMA ----
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const currentTheme = localStorage.getItem('theme');
@@ -7,19 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             document.body.classList.add('dark-mode');
-            themeIcon.classList.remove('bi-lightbulb-fill');
-            themeIcon.classList.add('bi-lightbulb-off-fill');
         } else {
             document.body.classList.remove('dark-mode');
-            themeIcon.classList.remove('bi-lightbulb-off-fill');
-            themeIcon.classList.add('bi-lightbulb-fill');
         }
     };
 
     if (currentTheme) {
         applyTheme(currentTheme);
-    } else {
-        themeIcon.classList.add('bi-lightbulb-fill');
     }
 
     themeToggle.addEventListener('click', () => {
@@ -28,222 +22,101 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
-<<<<<<< HEAD
     // ---- LÓGICA DO ANO DO RODAPÉ ----
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // ---- LOGICA DA API COM SKELETONS ABRANGENTES ----
+    // ---- LÓGICA DA API DO YOUTUBE (AMBIENTE DE PRODUÇÃO) ----
+    const MAX_LIVES_TO_SHOW = 3;
+    const MAX_COMPLETED_TO_SHOW = 3;
 
-    // 1. CONFIGURAÇÃO
-    const MAX_LIVES_TO_SHOW = 1;
-    const MAX_COMPLETED_TO_SHOW = 1;
-
-=======
-    // ---- LÓGICA DA API COM SKELETONS ABRANGENTES (VERSÃO REVISADA) ----
-
-    // 1. CONFIGURAÇÃO
-    const MAX_LIVES_TO_SHOW = 1;
-    const MAX_COMPLETED_TO_SHOW = 1;
-
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-    const CHANNEL_IDS_TO_MONITOR = [
-        'UC4_bL9_p3s01K_T1aG8m1dA', // Podpah
-        'UCp2tjaqW3S3pP_2J3qS_zaA', // Venus Podcast
-        'UCoB84QGiiwV3c01m_G34S7A', // Ticaracaticast
-        'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
-        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sports CLub
-        'UC6nODa90W_lAYHjMOp-U9wA'  // Caze TV
+    const channelsToTrack = [
+        { id: 'UC4_bL9_p3s01K_T1aG8m1dA', name: 'Podpah', logo: 'https://i.pravatar.cc/80?u=podpah' },
+        { id: 'UCp2tjaqW3S3pP_2J3qS_zaA', name: 'Venus Podcast', logo: 'https://i.pravatar.cc/80?u=venus' },
+        { id: 'UCoB84QGiiwV3c01m_G34S7A', name: 'Ticaracaticast', logo: 'https://i.pravatar.cc/80?u=ticaracaticast' },
+        { id: 'UC4K-979s9ltJPROmH-eYkiA', name: 'Flow Podcast', logo: 'https://i.pravatar.cc/80?u=flow' },
+        { id: 'UCk107Q3h57M3G1_d2Q3E1DQ', name: 'Flow Sport Club', logo: 'https://i.pravatar.cc/80?u=flowsportclub' },
+        { id: 'UC6nODa90W_lAYHjMOp-U9wA', name: 'CazéTV', logo: 'https://i.pravatar.cc/80?u=cazetv' },
     ];
 
-    // 2. SELETORES DO DOM
+    const liveListContainer = document.querySelector('.live-list');
     const liveSection = document.getElementById('live-channels-section');
-    const liveListContainer = liveSection.querySelector('.live-list');
-    const liveTitleElement = liveSection.querySelector('h2');
-    const liveButtonElement = liveSection.querySelector('.see-all-btn');
-
+    const completedListContainer = document.querySelector('.completed-list');
     const completedSection = document.getElementById('completed-section');
-    const completedListContainer = completedSection.querySelector('.completed-list');
-    const completedTitleElement = completedSection.querySelector('h2');
-    const completedButtonElement = completedSection.querySelector('.see-all-btn');
 
-<<<<<<< HEAD
-    // Variaveis para guardar o conteúdo original
-    let originalTexts = {};
-    
-    // 3. FUNCOES DE API
-=======
-    // Variáveis para guardar o conteúdo original
-    let originalTexts = {};
-    
-    // 3. FUNÇÕES DE API (sem alterações)
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-    async function fetchYouTubeVideos(channelIds, eventType, maxResults) {
-        const promises = channelIds.map(channelId => {
-            const apiUrl = `/api/youtube?channelId=${channelId}&eventType=${eventType}`;
-            return fetch(apiUrl).then(res => res.json()).catch(err => { console.error(err); return { items: [] }; });
-        });
-        try {
-            const results = await Promise.all(promises);
-            const allVideos = results.flatMap(result => result.items || []);
-            allVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
-            return allVideos.slice(0, maxResults);
-        } catch (error) { return []; }
+    function restoreSectionHeader(sectionElement) {
+        const titleElement = sectionElement.querySelector('h2');
+        if (titleElement) titleElement.innerHTML = titleElement.dataset.title;
+        const seeAllBtn = sectionElement.querySelector('.see-all-btn');
+        if (seeAllBtn) seeAllBtn.innerHTML = 'Ver todos <i class="fas fa-arrow-right"></i>';
     }
 
-    async function fetchChannelLogos(channelIds) {
-        if (channelIds.length === 0) return new Map();
-        const apiUrl = `/api/channels?ids=${channelIds.join(',')}`;
-        try {
-            const response = await fetch(apiUrl);
-            if (!response.ok) throw new Error(`Erro: ${response.statusText}`);
-            const data = await response.json();
-            const logoMap = new Map();
-            if (data.items) {
-                data.items.forEach(channel => logoMap.set(channel.id, channel.snippet.thumbnails.default.url));
+    async function checkAndDisplayLiveStreams() {
+        const liveItemsHTML = [];
+        let liveCount = 0;
+
+        for (const channel of channelsToTrack) {
+            if (liveCount >= MAX_LIVES_TO_SHOW) break;
+            
+            const apiUrl = `/api/youtube?channelId=${channel.id}&eventType=live`;
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    liveCount++;
+                    const liveStream = data.items[0];
+                    liveItemsHTML.push(`<div class="live-item"><div class="channel-logo-circle"><img src="${channel.logo}" alt="Logo ${channel.name}"></div><div class="item-info"><h3>${liveStream.snippet.title}</h3><p class="channel-name">${channel.name}</p></div><a href="https://www.youtube.com/watch?v=${liveStream.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`);
+                }
+            } catch (error) {
+                console.error(`Erro ao verificar o canal ${channel.name}:`, error);
             }
-            return logoMap;
-        } catch (error) { console.error(error); return new Map(); }
-    }
-
-<<<<<<< HEAD
-    // 4. FUNCOES DE SKELETON E RENDERIZAÇÃO
-=======
-    // 4. FUNÇÕES DE SKELETON E RENDERIZAÇÃO (REVISADAS)
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-
-    /** Gera o HTML para os skeletons dos cards, sempre com a cor neutra. */
-    function generateCardSkeletonsHTML(count) {
-        let skeletonsHTML = '';
-<<<<<<< HEAD
-        // ForCa o uso de 'completed-item' para que ambos os skeletons tenham a cor de fundo neutra
-=======
-        // Força o uso de 'completed-item' para que ambos os skeletons tenham a cor de fundo neutra
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        const itemClass = 'completed-item'; 
-        for (let i = 0; i < count; i++) {
-            skeletonsHTML += `
-                <div class="${itemClass}">
-                    <div class="skeleton skeleton-circle"></div>
-                    <div class="skeleton-info">
-                        <div class="skeleton skeleton-line title"></div>
-                        <div class="skeleton skeleton-line channel"></div>
-                    </div>
-                    <div class="skeleton skeleton-button"></div>
-                </div>`;
         }
-        return skeletonsHTML;
-    }
-
-<<<<<<< HEAD
-    /** Aplica o estado de carregamento (skeletons) na pagina. */
-=======
-    /** Aplica o estado de carregamento (skeletons) na página. */
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-    function applySkeletons() {
-        // Guarda os textos originais
-        originalTexts.liveTitle = liveTitleElement.innerHTML;
-        originalTexts.liveButton = liveButtonElement.innerHTML;
-        originalTexts.completedTitle = completedTitleElement.innerHTML;
-        originalTexts.completedButton = completedButtonElement.innerHTML;
-
-<<<<<<< HEAD
-        // Aplica os skeletons nos cabecalhos
-=======
-        // Aplica os skeletons nos cabeçalhos
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        liveTitleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
-        liveButtonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
-        completedTitleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
-        completedButtonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
         
-        // Aplica os skeletons nos cards
-        liveListContainer.innerHTML = generateCardSkeletonsHTML(MAX_LIVES_TO_SHOW);
-        completedListContainer.innerHTML = generateCardSkeletonsHTML(MAX_COMPLETED_TO_SHOW);
-    }
-    
-<<<<<<< HEAD
-    /** Restaura os cabecalhos e renderiza o conteudo final. */
-=======
-    /** Restaura os cabeçalhos e renderiza o conteúdo final. */
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-    function renderFinalContent(liveVideos, completedVideos, logoMap) {
-        // Restaura os textos dos cabeçalhos
-        liveTitleElement.innerHTML = originalTexts.liveTitle;
-        liveButtonElement.innerHTML = originalTexts.liveButton;
-        completedTitleElement.innerHTML = originalTexts.completedTitle;
-        completedButtonElement.innerHTML = originalTexts.completedButton;
-
-<<<<<<< HEAD
-        // Renderiza a secao AO VIVO
-=======
-        // Renderiza a seção AO VIVO
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        if (liveVideos && liveVideos.length > 0) {
-            liveSection.style.display = 'block';
-            const liveItemsHTML = liveVideos.map(video => {
-                const logoUrl = logoMap.get(video.snippet.channelId) || video.snippet.thumbnails.default.url;
-                return `<div class="live-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
-            }).join('');
-            liveListContainer.innerHTML = liveItemsHTML;
+        if (liveCount > 0) {
+            liveListContainer.innerHTML = liveItemsHTML.join('');
+            restoreSectionHeader(liveSection);
         } else {
             liveSection.style.display = 'none';
         }
+    }
 
-<<<<<<< HEAD
-        // Renderiza a secao CONCLUIDOS
-=======
-        // Renderiza a seção CONCLUÍDOS
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        if (completedVideos && completedVideos.length > 0) {
-            completedSection.style.display = 'block';
-            const completedItemsHTML = completedVideos.map(video => {
-                const logoUrl = logoMap.get(video.snippet.channelId) || video.snippet.thumbnails.default.url;
-                return `<div class="completed-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`;
-            }).join('');
-            completedListContainer.innerHTML = completedItemsHTML;
-        } else {
+    async function fetchAndDisplayCompletedStreams() {
+        const promises = channelsToTrack.map(channel => {
+            const apiUrl = `/api/youtube?channelId=${channel.id}&eventType=completed`;
+            return fetch(apiUrl).then(res => res.ok ? res.json() : Promise.reject(res));
+        });
+
+        try {
+            const results = await Promise.allSettled(promises);
+            let allCompletedStreams = [];
+
+            results.forEach((result, index) => {
+                if (result.status === 'fulfilled' && result.value.items) {
+                    const channelInfo = channelsToTrack[index];
+                    const videosWithChannelInfo = result.value.items.map(item => ({...item, channelName: channelInfo.name, channelLogo: channelInfo.logo }));
+                    allCompletedStreams.push(...videosWithChannelInfo);
+                }
+            });
+
+            allCompletedStreams.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+            const latestStreams = allCompletedStreams.slice(0, MAX_COMPLETED_TO_SHOW);
+
+            if (latestStreams.length > 0) {
+                completedListContainer.innerHTML = latestStreams.map(stream => `<div class="completed-item"><div class="channel-logo-circle"><img src="${stream.channelLogo}" alt="Logo ${stream.channelName}"></div><div class="item-info"><h3>${stream.snippet.title}</h3><p class="channel-name">${stream.channelName}</p></div><a href="https://www.youtube.com/watch?v=${stream.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`).join('');
+                restoreSectionHeader(completedSection);
+            } else {
+                completedSection.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Erro ao buscar vídeos concluídos:', error);
             completedSection.style.display = 'none';
         }
     }
 
-<<<<<<< HEAD
-    // 5. INICIALIZACAO (LOGICA PRINCIPAL)
-=======
-    // 5. INICIALIZAÇÃO (LÓGICA PRINCIPAL)
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-    async function initializePage() {
-        // Passo 1: Aplicar todos os skeletons
-        applySkeletons();
-
-<<<<<<< HEAD
-        // Passo 2: Buscar os videos
-=======
-        // Passo 2: Buscar os vídeos
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        const [liveVideos, completedVideos] = await Promise.all([
-            fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'live', MAX_LIVES_TO_SHOW),
-            fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'completed', MAX_COMPLETED_TO_SHOW)
-        ]);
-
-        // Passo 3: Buscar os logos
-        const allVideos = [...liveVideos, ...completedVideos];
-        const uniqueChannelIds = [...new Set(allVideos.map(video => video.snippet.channelId))];
-        const logoMap = await fetchChannelLogos(uniqueChannelIds);
-        
-<<<<<<< HEAD
-        // Passo 4: Renderizar o conteudo final, substituindo os skeletons
-=======
-        // Passo 4: Renderizar o conteúdo final, substituindo os skeletons
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
-        renderFinalContent(liveVideos, completedVideos, logoMap);
-    }
-
-    initializePage();
-<<<<<<< HEAD
+    checkAndDisplayLiveStreams();
+    fetchAndDisplayCompletedStreams();
 });
-=======
-});
->>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
