@@ -1,7 +1,5 @@
-// Este é o script.js para TESTE LOCAL. A chave de API está exposta.
-
 document.addEventListener('DOMContentLoaded', () => {
-    // ---- LÓGICA DO TEMA ----
+    // ---- LÓGICA DO TEMA (Mantida como estava) ----
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const currentTheme = localStorage.getItem('theme');
@@ -9,17 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             document.body.classList.add('dark-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
+            themeIcon.classList.remove('bi-lightbulb-fill');
+            themeIcon.classList.add('bi-lightbulb-off-fill');
         } else {
             document.body.classList.remove('dark-mode');
-            themeIcon.classList.remove('fa-sun');
-            themeIcon.classList.add('fa-moon');
+            themeIcon.classList.remove('bi-lightbulb-off-fill');
+            themeIcon.classList.add('bi-lightbulb-fill');
         }
     };
 
     if (currentTheme) {
         applyTheme(currentTheme);
+    } else {
+        themeIcon.classList.add('bi-lightbulb-fill');
     }
 
     themeToggle.addEventListener('click', () => {
@@ -28,101 +28,145 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
-    // ---- LÓGICA DA API DO YOUTUBE (MODO DE TESTE LOCAL) ----
-    
-    // SUBSTITUA PELA SUA CHAVE DE API REAL PARA O TESTE
 
+    // ---- LÓGICA DA API (MODELO PROXY) COM BUSCA DE LOGOS ----
+
+    // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
     const MAX_COMPLETED_TO_SHOW = 3;
 
-    const channelsToTrack = [
-        { id: 'UC4_bL9_p3s01K_T1aG8m1dA', name: 'Podpah', logo: 'https://i.pravatar.cc/80?u=podpah' },
-        { id: 'UCp2tjaqW3S3pP_2J3qS_zaA', name: 'Venus Podcast', logo: 'https://i.pravatar.cc/80?u=venus' },
-        { id: 'UCoB84QGiiwV3c01m_G34S7A', name: 'Ticaracaticast', logo: 'https://i.pravatar.cc/80?u=ticaracaticast' },
-        { id: 'UC4K-979s9ltJPROmH-eYkiA', name: 'Flow Podcast', logo: 'https://i.pravatar.cc/80?u=flow' },
-        { id: 'UCk107Q3h57M3G1_d2Q3E1DQ', name: 'Flow Sport Club', logo: 'https://i.pravatar.cc/80?u=flowsportclub' },
-        { id: 'UC6nODa90W_lAYHjMOp-U9wA', name: 'CazéTV', logo: 'https://i.pravatar.cc/80?u=cazetv' },
+    const CHANNEL_IDS_TO_MONITOR = [
+        'UCk_iCg2GfTUW_4O_TzT4Aaw', // Podpah
+        'UCy-Iu_J_An9i4SA9m1g5oNA', // Venus Podcast
+        'UCTU2v_xY6g4bIO7N3aU5ylw', // Ticaracaticast
+        'UC3tNb3_MhdgAS2i_2i3d_3g', // Flow Podcast
+        'UCdcn1G4y_K0t2h2i0B02H_w', // Ciência Sem Fim
+        'UCR_M40u_Tj_2mJj2aIHaJ3g'  // Nerdcast
     ];
 
+    // 2. SELETORES DO DOM
     const liveListContainer = document.querySelector('.live-list');
     const liveSection = document.getElementById('live-channels-section');
     const completedListContainer = document.querySelector('.completed-list');
     const completedSection = document.getElementById('completed-section');
+    
+    // 3. FUNÇÕES DE API (Chamadas para o seu servidor proxy)
 
-    async function checkAndDisplayLiveStreams() {
-        const liveItemsHTML = [];
-        let liveCount = 0;
-
-        for (const channel of channelsToTrack) {
-            if (liveCount >= MAX_LIVES_TO_SHOW) {
-                break;
-            }
-            // URL REVERTIDA PARA TESTE LOCAL
-            const apiUrl = `/api/youtube?channelId=${channel.id}&eventType=live`;
-            try {
-                const response = await fetch(apiUrl);
-                const data = await response.json();
-                if (data.items && data.items.length > 0) {
-                    liveCount++;
-                    const liveStream = data.items[0];
-                    const liveItemHTML = `<div class="live-item"><div class="channel-logo-circle"><img src="${channel.logo}" alt="Logo ${channel.name}"></div><div class="item-info"><h3>${liveStream.snippet.title}</h3><p class="channel-name">${channel.name}</p></div><a href="https://www.youtube.com/watch?v=${liveStream.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
-                    liveItemsHTML.push(liveItemHTML);
-                }
-            } catch (error) {
-                console.error(`Erro ao verificar o canal ${channel.name}:`, error);
-            }
-        }
-        
-        if (liveCount > 0) {
-            liveListContainer.innerHTML = liveItemsHTML.join('');
-            const titleElement = liveSection.querySelector('h2');
-            if (titleElement) titleElement.innerHTML = titleElement.dataset.title || 'Ao Vivo Agora';
-            const seeAllBtn = liveSection.querySelector('.see-all-btn');
-            if (seeAllBtn) seeAllBtn.innerHTML = 'Ver todos <i class="fas fa-arrow-right"></i>';
-        } else {
-            liveSection.style.display = 'none';
-        }
-    }
-
-    async function fetchAndDisplayCompletedStreams() {
-        let allCompletedStreams = [];
-        const promises = channelsToTrack.map(channel => {
-            // URL REVERTIDA PARA TESTE LOCAL
-            const apiUrl = `/api/youtube?channelId=${channel.id}&eventType=completed`;
+    /** Busca vídeos (live ou completed) através do seu proxy */
+    async function fetchYouTubeVideos(channelIds, eventType, maxResults) {
+        // As chamadas agora são para o seu endpoint /api/youtube
+        const promises = channelIds.map(channelId => {
+            const apiUrl = `/api/youtube?channelId=${channelId}&eventType=${eventType}`;
             return fetch(apiUrl).then(res => res.json());
         });
 
         try {
             const results = await Promise.all(promises);
-            results.forEach((result, index) => {
-                if (result.items) {
-                    const channelInfo = channelsToTrack[index];
-                    const videosWithChannelInfo = result.items.map(item => ({...item, channelName: channelInfo.name, channelLogo: channelInfo.logo }));
-                    allCompletedStreams.push(...videosWithChannelInfo);
-                }
-            });
-
-            allCompletedStreams.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
-            const latestStreams = allCompletedStreams.slice(0, MAX_COMPLETED_TO_SHOW);
-
-            if (latestStreams.length > 0) {
-                const completedItemsHTML = latestStreams.map(stream => `<div class="completed-item"><div class="channel-logo-circle"><img src="${stream.channelLogo}" alt="Logo ${stream.channelName}"></div><div class="item-info"><h3>${stream.snippet.title}</h3><p class="channel-name">${stream.channelName}</p></div><a href="https://www.youtube.com/watch?v=${stream.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`).join('');
-                completedListContainer.innerHTML = completedItemsHTML;
-
-                const titleElement = completedSection.querySelector('h2');
-                if (titleElement) titleElement.innerHTML = titleElement.dataset.title || 'Episódios Concluídos';
-                const seeAllBtn = completedSection.querySelector('.see-all-btn');
-                if (seeAllBtn) seeAllBtn.innerHTML = 'Ver todos <i class="fas fa-arrow-right"></i>';
-            } else {
-                completedSection.style.display = 'none';
-            }
+            const allVideos = results.flatMap(result => result.items || []);
+            allVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+            return allVideos.slice(0, maxResults);
         } catch (error) {
-            console.error('Erro ao buscar vídeos concluídos:', error);
+            console.error(`Erro ao buscar vídeos '${eventType}' via proxy:`, error);
+            return [];
+        }
+    }
+
+    /** Busca os logos dos canais através do seu proxy */
+    async function fetchChannelLogos(channelIds) {
+        if (channelIds.length === 0) {
+            return new Map();
+        }
+        
+        // A chamada agora é para o seu novo endpoint /api/channels
+        // O backend deve pegar o parâmetro 'ids' e fazer a chamada para a API do Google
+        const apiUrl = `/api/channels?ids=${channelIds.join(',')}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const logoMap = new Map();
+            if (data.items) {
+                data.items.forEach(channel => {
+                    logoMap.set(channel.id, channel.snippet.thumbnails.default.url);
+                });
+            }
+            return logoMap;
+        } catch (error) {
+            console.error('Erro ao buscar logos dos canais via proxy:', error);
+            return new Map();
+        }
+    }
+
+    // 4. FUNÇÕES DE RENDERIZAÇÃO HTML (Sem alterações, já são flexíveis)
+    
+    function renderLiveStreams(videos, logoMap) {
+        if (videos && videos.length > 0) {
+            liveSection.style.display = 'block';
+            const liveItemsHTML = videos.map(video => {
+                const logoUrl = logoMap.get(video.snippet.channelId) || video.snippet.thumbnails.default.url;
+                return `
+                <div class="live-item">
+                    <div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div>
+                    <div class="item-info">
+                        <h3>${video.snippet.title}</h3>
+                        <p class="channel-name">${video.snippet.channelTitle}</p>
+                    </div>
+                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn">
+                        <i class="fas fa-circle"></i> AO VIVO
+                    </a>
+                </div>`;
+            }).join('');
+            liveListContainer.innerHTML = liveItemsHTML;
+        } else {
+            liveSection.style.display = 'none';
+        }
+    }
+    
+    function renderCompletedStreams(videos, logoMap) {
+        if (videos && videos.length > 0) {
+            completedSection.style.display = 'block';
+            const completedItemsHTML = videos.map(video => {
+                const logoUrl = logoMap.get(video.snippet.channelId) || video.snippet.thumbnails.default.url;
+                return `
+                <div class="completed-item">
+                    <div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div>
+                    <div class="item-info">
+                        <h3>${video.snippet.title}</h3>
+                        <p class="channel-name">${video.snippet.channelTitle}</p>
+                    </div>
+                    <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn">
+                        <i class="fas fa-play"></i>ASSISTIR
+                    </a>
+                </div>`;
+            }).join('');
+            completedListContainer.innerHTML = completedItemsHTML;
+        } else {
             completedSection.style.display = 'none';
         }
     }
 
-    // Chama as duas funções para popular o site
-    checkAndDisplayLiveStreams();
-    fetchAndDisplayCompletedStreams();
+    // 5. INICIALIZAÇÃO (LÓGICA PRINCIPAL)
+    async function initializePage() {
+        liveListContainer.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Carregando lives...</p>';
+        completedListContainer.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Carregando episódios...</p>';
+        
+        // Passo 1: Buscar os vídeos via proxy
+        const [liveVideos, completedVideos] = await Promise.all([
+            fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'live', MAX_LIVES_TO_SHOW),
+            fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'completed', MAX_COMPLETED_TO_SHOW)
+        ]);
+
+        // Passo 2: Extrair IDs únicos dos canais
+        const allVideos = [...liveVideos, ...completedVideos];
+        const uniqueChannelIds = [...new Set(allVideos.map(video => video.snippet.channelId))];
+        
+        // Passo 3: Buscar os logos via proxy
+        const logoMap = await fetchChannelLogos(uniqueChannelIds);
+        
+        // Passo 4: Renderizar o conteúdo
+        renderLiveStreams(liveVideos, logoMap);
+        renderCompletedStreams(completedVideos, logoMap);
+    }
+
+    initializePage();
 });
