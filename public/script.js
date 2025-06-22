@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ---- LÓGICA DO TEMA (Mantida como estava) ----
+    // ---- LÓGICA DO TEMA ----
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const currentTheme = localStorage.getItem('theme');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentTheme) {
         applyTheme(currentTheme);
     } else {
-        themeIcon.classList.add('bi-lightbulb-fill');
+        themeIcon.classList.add('bi-lightbulb-fill'); // Ícone padrão
     }
 
     themeToggle.addEventListener('click', () => {
@@ -29,12 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // ---- LÓGICA DA API (MODELO PROXY) COM BUSCA DE LOGOS ----
+    // ---- LÓGICA DA API (MODELO PROXY) COM BUSCA DE LOGOS E SKELETON MELHORADO ----
 
     // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
     const MAX_COMPLETED_TO_SHOW = 3;
 
+    // Lista de canais que você quer monitorar. A chave da API fica segura no seu servidor.
     const CHANNEL_IDS_TO_MONITOR = [
         'UCk_iCg2GfTUW_4O_TzT4Aaw', // Podpah
         'UCy-Iu_J_An9i4SA9m1g5oNA', // Venus Podcast
@@ -54,10 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /** Busca vídeos (live ou completed) através do seu proxy */
     async function fetchYouTubeVideos(channelIds, eventType, maxResults) {
-        // As chamadas agora são para o seu endpoint /api/youtube
         const promises = channelIds.map(channelId => {
             const apiUrl = `/api/youtube?channelId=${channelId}&eventType=${eventType}`;
-            return fetch(apiUrl).then(res => res.json());
+            return fetch(apiUrl).then(res => res.json()).catch(err => {
+                console.error(`Falha na requisição para ${apiUrl}:`, err);
+                return { items: [] }; // Retorna um objeto vazio em caso de falha de rede para não quebrar o Promise.all
+            });
         });
 
         try {
@@ -66,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             allVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
             return allVideos.slice(0, maxResults);
         } catch (error) {
-            console.error(`Erro ao buscar vídeos '${eventType}' via proxy:`, error);
+            console.error(`Erro ao processar vídeos '${eventType}' via proxy:`, error);
             return [];
         }
     }
@@ -77,12 +80,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return new Map();
         }
         
-        // A chamada agora é para o seu novo endpoint /api/channels
-        // O backend deve pegar o parâmetro 'ids' e fazer a chamada para a API do Google
         const apiUrl = `/api/channels?ids=${channelIds.join(',')}`;
 
         try {
             const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error(`Erro na resposta do servidor: ${response.statusText}`);
+            }
             const data = await response.json();
             const logoMap = new Map();
             if (data.items) {
@@ -97,7 +101,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. FUNÇÕES DE RENDERIZAÇÃO HTML (Sem alterações, já são flexíveis)
+    // 4. FUNÇÕES DE RENDERIZAÇÃO HTML
+
+    /** Gera o HTML para um número específico de skeletons, imitando o estilo dos cards. */
+    function generateSkeletonsHTML(count, type) {
+        let skeletonsHTML = '';
+        const itemClass = type === 'live' ? 'live-item' : 'completed-item';
+
+        for (let i = 0; i < count; i++) {
+            skeletonsHTML += `
+                <div class="${itemClass}">
+                    <div class="skeleton skeleton-circle"></div>
+                    <div class="skeleton-info">
+                        <div class="skeleton skeleton-line title"></div>
+                        <div class="skeleton skeleton-line channel"></div>
+                    </div>
+                    <div class="skeleton skeleton-button"></div>
+                </div>
+            `;
+        }
+        return skeletonsHTML;
+    }
     
     function renderLiveStreams(videos, logoMap) {
         if (videos && videos.length > 0) {
@@ -147,26 +171,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. INICIALIZAÇÃO (LÓGICA PRINCIPAL)
     async function initializePage() {
-        liveListContainer.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Carregando lives...</p>';
-        completedListContainer.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Carregando episódios...</p>';
-        
-        // Passo 1: Buscar os vídeos via proxy
+        // Passo 1: Mostrar Skeletons com o estilo correto
+        liveListContainer.innerHTML = generateSkeletonsHTML(MAX_LIVES_TO_SHOW, 'live');
+        completedListContainer.innerHTML = generateSkeletonsHTML(MAX_COMPLETED_TO_SHOW, 'completed');
+
+        // Passo 2: Buscar os vídeos via proxy
         const [liveVideos, completedVideos] = await Promise.all([
             fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'live', MAX_LIVES_TO_SHOW),
             fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'completed', MAX_COMPLETED_TO_SHOW)
         ]);
 
-        // Passo 2: Extrair IDs únicos dos canais
+        // Passo 3: Extrair IDs únicos dos canais
         const allVideos = [...liveVideos, ...completedVideos];
         const uniqueChannelIds = [...new Set(allVideos.map(video => video.snippet.channelId))];
         
-        // Passo 3: Buscar os logos via proxy
+        // Passo 4: Buscar os logos via proxy
         const logoMap = await fetchChannelLogos(uniqueChannelIds);
         
-        // Passo 4: Renderizar o conteúdo
+        // Passo 5: Renderizar o conteúdo real, substituindo os skeletons
         renderLiveStreams(liveVideos, logoMap);
         renderCompletedStreams(completedVideos, logoMap);
     }
 
+    // Inicia todo o processo
     initializePage();
 });
