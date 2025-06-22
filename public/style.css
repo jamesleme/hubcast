@@ -134,11 +134,6 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 /* ==== ESTILOS DOS COMPONENTES ==== */
 /* ============================================== */
 
-/* Esconde as seções dinâmicas por padrão para evitar que elas "pisquem" na tela */
-#live-channels-section, #completed-section {
-    display: none;
-}
-
 /* 1. SEÇÃO BANNER AO VIVO */
 #live-section-banner { margin: 40px 0; }
 #live-section-banner h2 { border-bottom: none; padding-bottom: 0; font-size: 1rem; letter-spacing: 1px; }
@@ -326,39 +321,178 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
-/* ---- SKELETON LOADER ---- */
-.shimmer-bg { animation: shimmer 2s infinite linear; background: linear-gradient(to right, var(--bg-secondary) 4%, var(--border-color) 25%, var(--bg-secondary) 36%); background-size: 1200px 100%; }
-@keyframes shimmer { 0% { background-position: -1200px 0; } 100% { background-position: 1200px 0; } }
-.skeleton-item { border-color: var(--border-color) !important; background-color: var(--bg-card) !important; box-shadow: -7px 7px 0 1px var(--bg-secondary) !important; }
-.skeleton-logo { width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0; }
-.skeleton-text { height: 20px; width: 90%; border-radius: 4px; margin-bottom: 10px; }
-.skeleton-text-short { width: 60%; height: 16px; margin-bottom: 0; }
-.skeleton-button { height: 35px; width: 90px; border-radius: 4px; margin-left: auto; }
-.skeleton-title { display: inline-block; width: 220px; height: 30px; border-radius: 6px; vertical-align: middle; }
-.skeleton-button-small { display: inline-block; width: 85px; height: 22px; border-radius: 4px; vertical-align: middle; }
+.main-footer-container {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding: 50px 0;
+    margin-top: 80px;
+    border-top: 1px solid var(--border-color);
+}
 
-/* ---- RODAPÉ (FOOTER) ---- */
-.main-footer-container { background-color: var(--bg-secondary); color: var(--text-secondary); padding: 50px 0; margin-top: 80px; border-top: 1px solid var(--border-color); }
-.footer-content { display: flex; justify-content: space-between; align-items: center; gap: 30px; }
-.footer-logo { font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 0 0 5px 0; }
-.footer-copyright { font-size: 0.85rem; }
-.footer-right { display: flex; align-items: center; gap: 40px; }
-.footer-nav ul { display: flex; list-style: none; gap: 25px; }
-.footer-nav a { text-decoration: none; color: var(--text-secondary); font-weight: 600; transition: color 0.2s ease; }
-.footer-nav a:hover { color: var(--text-primary); }
-.footer-social { display: flex; gap: 20px; }
-.footer-social a { color: var(--text-secondary); font-size: 1.3rem; transition: color 0.2s ease, transform 0.2s ease; }
-.footer-social a:hover { color: var(--accent-cyan); transform: translateY(-2px); }
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.footer-logo {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.footer-copyright {
+    font-size: 0.85rem;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.footer-nav ul {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.footer-nav a {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.footer-nav a:hover {
+    color: var(--text-primary);
+}
+
+.footer-social {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-social a {
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social a:hover {
+    color: var(--accent-cyan);
+    transform: translateY(-2px);
+}
 
 /* ---- RESPONSIVIDADE ---- */
 @media (max-width: 992px) {
-    .main-content-wrapper { grid-template-columns: 1fr; }
+    /* Desfaz o layout de grid, empilhando as colunas */
+    .main-content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .sidebar-column section {
+        position: static; /* Remove o 'sticky' em telas menores */
+    }
 }
+
 @media (max-width: 768px) {
     .main-header { flex-direction: column; gap: 20px; padding: 20px; }
-    .live-item, .completed-item, .upcoming-item { flex-direction: column; align-items: flex-start; text-align: left; }
-    .watch-live-btn, .watch-vod-btn, .item-schedule { margin-left: 0; margin-top: 10px; padding-left: 0; }
-    .skeleton-button { margin-left: 0; margin-top: 10px; }
-    .footer-content { flex-direction: column; text-align: center; gap: 40px; }
-    .footer-right { flex-direction: column; gap: 30px; }
+    .logo h1 { font-size: 2.8rem; }
+    .live-banner { flex-direction: column; text-align: center; }
+    .live-banner-image img { width: 100%; max-width: 350px; height: auto; }
+    .live-banner-content h2 { justify-content: center; }
+    .upcoming-item, .live-item { flex-direction: column; align-items: flex-start; text-align: left; }
+    .item-schedule, .watch-live-btn { margin-left: 0; margin-top: 10px; padding-left: 0; }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .footer-right {
+        flex-direction: column;
+        gap: 30px;
+    }
+}
+
+/* ---- SKELETON LOADING ---- */
+
+/* A animação de brilho (shimmer) permanece a mesma */
+@keyframes shimmer {
+    0% { background-position: -468px 0; }
+    100% { background-position: 468px 0; }
+}
+
+/* Base para qualquer elemento skeleton */
+.skeleton {
+    background-color: var(--border-color); /* Cor base do skeleton */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Aplica a animação de brilho */
+.skeleton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* O gradiente que cria o efeito de brilho */
+    background: linear-gradient(to right, 
+        transparent 0%, 
+        var(--bg-secondary) 50%, 
+        transparent 100%
+    );
+    animation: shimmer 1.5s infinite linear;
+}
+
+/* Estilos específicos para cada parte do skeleton */
+.skeleton-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.skeleton-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Espaçamento entre as linhas de texto do skeleton */
+}
+
+.skeleton-line {
+    height: 16px;
+    border-radius: 4px;
+}
+.skeleton-line.title {
+    height: 20px;
+    width: 85%; /* Linha do título é mais longa */
+}
+.skeleton-line.channel {
+    width: 45%; /* Linha do nome do canal é mais curta */
+}
+
+.skeleton-button {
+    margin-left: auto; /* Empurra o botão para a direita */
+    width: 100px;
+    height: 35px;
+    border-radius: 4px; /* Opcional: pode usar o mesmo raio do botão real */
+    flex-shrink: 0;
+}
+
+.skeleton-line.header-title {
+    width: 250px;
+    height: 30px; /* Mais alto para corresponder ao h2 */
+    display: inline-block; /* Garante que o span tenha dimensões */
+}
+
+.skeleton-line.header-button {
+    width: 100px;
+    height: 20px;
+    display: inline-block; /* Garante que o span tenha dimensões */
 }
