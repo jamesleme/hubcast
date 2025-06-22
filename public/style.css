@@ -412,9 +412,11 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 .skeleton-line.header-title {
     width: 250px;
     height: 30px; /* Mais alto para corresponder ao h2 */
+    display: inline-block; /* Garante que o span tenha dimensões */
 }
 
 .skeleton-line.header-button {
     width: 100px;
     height: 20px;
+    display: inline-block; /* Garante que o span tenha dimensões */
 }
