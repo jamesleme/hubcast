@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
+<<<<<<< HEAD
     // ---- LÓGICA DO ANO DO RODAPÉ ----
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
@@ -40,6 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_LIVES_TO_SHOW = 1;
     const MAX_COMPLETED_TO_SHOW = 1;
 
+=======
+    // ---- LÓGICA DA API COM SKELETONS ABRANGENTES (VERSÃO REVISADA) ----
+
+    // 1. CONFIGURAÇÃO
+    const MAX_LIVES_TO_SHOW = 1;
+    const MAX_COMPLETED_TO_SHOW = 1;
+
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
     const CHANNEL_IDS_TO_MONITOR = [
         'UC4_bL9_p3s01K_T1aG8m1dA', // Podpah
         'UCp2tjaqW3S3pP_2J3qS_zaA', // Venus Podcast
@@ -60,10 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const completedTitleElement = completedSection.querySelector('h2');
     const completedButtonElement = completedSection.querySelector('.see-all-btn');
 
+<<<<<<< HEAD
     // Variaveis para guardar o conteúdo original
     let originalTexts = {};
     
     // 3. FUNCOES DE API
+=======
+    // Variáveis para guardar o conteúdo original
+    let originalTexts = {};
+    
+    // 3. FUNÇÕES DE API (sem alterações)
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
     async function fetchYouTubeVideos(channelIds, eventType, maxResults) {
         const promises = channelIds.map(channelId => {
             const apiUrl = `/api/youtube?channelId=${channelId}&eventType=${eventType}`;
@@ -92,12 +108,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) { console.error(error); return new Map(); }
     }
 
+<<<<<<< HEAD
     // 4. FUNCOES DE SKELETON E RENDERIZAÇÃO
+=======
+    // 4. FUNÇÕES DE SKELETON E RENDERIZAÇÃO (REVISADAS)
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
 
     /** Gera o HTML para os skeletons dos cards, sempre com a cor neutra. */
     function generateCardSkeletonsHTML(count) {
         let skeletonsHTML = '';
+<<<<<<< HEAD
         // ForCa o uso de 'completed-item' para que ambos os skeletons tenham a cor de fundo neutra
+=======
+        // Força o uso de 'completed-item' para que ambos os skeletons tenham a cor de fundo neutra
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         const itemClass = 'completed-item'; 
         for (let i = 0; i < count; i++) {
             skeletonsHTML += `
@@ -113,7 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return skeletonsHTML;
     }
 
+<<<<<<< HEAD
     /** Aplica o estado de carregamento (skeletons) na pagina. */
+=======
+    /** Aplica o estado de carregamento (skeletons) na página. */
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
     function applySkeletons() {
         // Guarda os textos originais
         originalTexts.liveTitle = liveTitleElement.innerHTML;
@@ -121,7 +149,11 @@ document.addEventListener('DOMContentLoaded', () => {
         originalTexts.completedTitle = completedTitleElement.innerHTML;
         originalTexts.completedButton = completedButtonElement.innerHTML;
 
+<<<<<<< HEAD
         // Aplica os skeletons nos cabecalhos
+=======
+        // Aplica os skeletons nos cabeçalhos
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         liveTitleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
         liveButtonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
         completedTitleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
@@ -132,7 +164,11 @@ document.addEventListener('DOMContentLoaded', () => {
         completedListContainer.innerHTML = generateCardSkeletonsHTML(MAX_COMPLETED_TO_SHOW);
     }
     
+<<<<<<< HEAD
     /** Restaura os cabecalhos e renderiza o conteudo final. */
+=======
+    /** Restaura os cabeçalhos e renderiza o conteúdo final. */
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
     function renderFinalContent(liveVideos, completedVideos, logoMap) {
         // Restaura os textos dos cabeçalhos
         liveTitleElement.innerHTML = originalTexts.liveTitle;
@@ -140,7 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
         completedTitleElement.innerHTML = originalTexts.completedTitle;
         completedButtonElement.innerHTML = originalTexts.completedButton;
 
+<<<<<<< HEAD
         // Renderiza a secao AO VIVO
+=======
+        // Renderiza a seção AO VIVO
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         if (liveVideos && liveVideos.length > 0) {
             liveSection.style.display = 'block';
             const liveItemsHTML = liveVideos.map(video => {
@@ -152,7 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
             liveSection.style.display = 'none';
         }
 
+<<<<<<< HEAD
         // Renderiza a secao CONCLUIDOS
+=======
+        // Renderiza a seção CONCLUÍDOS
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         if (completedVideos && completedVideos.length > 0) {
             completedSection.style.display = 'block';
             const completedItemsHTML = completedVideos.map(video => {
@@ -165,12 +209,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+<<<<<<< HEAD
     // 5. INICIALIZACAO (LOGICA PRINCIPAL)
+=======
+    // 5. INICIALIZAÇÃO (LÓGICA PRINCIPAL)
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
     async function initializePage() {
         // Passo 1: Aplicar todos os skeletons
         applySkeletons();
 
+<<<<<<< HEAD
         // Passo 2: Buscar os videos
+=======
+        // Passo 2: Buscar os vídeos
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         const [liveVideos, completedVideos] = await Promise.all([
             fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'live', MAX_LIVES_TO_SHOW),
             fetchYouTubeVideos(CHANNEL_IDS_TO_MONITOR, 'completed', MAX_COMPLETED_TO_SHOW)
@@ -181,9 +233,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const uniqueChannelIds = [...new Set(allVideos.map(video => video.snippet.channelId))];
         const logoMap = await fetchChannelLogos(uniqueChannelIds);
         
+<<<<<<< HEAD
         // Passo 4: Renderizar o conteudo final, substituindo os skeletons
+=======
+        // Passo 4: Renderizar o conteúdo final, substituindo os skeletons
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
         renderFinalContent(liveVideos, completedVideos, logoMap);
     }
 
     initializePage();
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e

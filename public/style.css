@@ -321,6 +321,7 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
+<<<<<<< HEAD
 .main-footer-container {
     background-color: var(--bg-secondary);
     color: var(--text-secondary);
@@ -386,6 +387,8 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     transform: translateY(-2px);
 }
 
+=======
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
 /* ---- RESPONSIVIDADE ---- */
 @media (max-width: 992px) {
     /* Desfaz o layout de grid, empilhando as colunas */
@@ -405,6 +408,7 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     .live-banner-content h2 { justify-content: center; }
     .upcoming-item, .live-item { flex-direction: column; align-items: flex-start; text-align: left; }
     .item-schedule, .watch-live-btn { margin-left: 0; margin-top: 10px; padding-left: 0; }
+<<<<<<< HEAD
 
     .footer-content {
         flex-direction: column;
@@ -416,6 +420,8 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
         flex-direction: column;
         gap: 30px;
     }
+=======
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
 }
 
 /* ---- SKELETON LOADING ---- */
@@ -495,4 +501,8 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     width: 100px;
     height: 20px;
     display: inline-block; /* Garante que o span tenha dimensões */
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> c2ebe2ef68d69594bd3ac53c3cdf91e7c2f93a5e
