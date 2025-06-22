@@ -35,12 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_COMPLETED_TO_SHOW = 1;
 
     const CHANNEL_IDS_TO_MONITOR = [
-        'UCk_iCg2GfTUW_4O_TzT4Aaw', // Podpah
-        'UCy-Iu_J_An9i4SA9m1g5oNA', // Venus Podcast
-        'UCTU2v_xY6g4bIO7N3aU5ylw', // Ticaracaticast
-        'UC3tNb3_MhdgAS2i_2i3d_3g', // Flow Podcast
-        'UCdcn1G4y_K0t2h2i0B02H_w', // Ciência Sem Fim
-        'UCFYYhd9-VxkHnaA5cOiSybA'  // Nerdcast
+        'UC4_bL9_p3s01K_T1aG8m1dA', // Podpah
+        'UCp2tjaqW3S3pP_2J3qS_zaA', // Venus Podcast
+        'UCoB84QGiiwV3c01m_G34S7A', // Ticaracaticast
+        'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
+        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sports CLub
+        'UC6nODa90W_lAYHjMOp-U9wA'  // Caze TV
     ];
 
     // 2. SELETORES DO DOM
