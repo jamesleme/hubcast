@@ -408,3 +408,13 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     border-radius: 4px; /* Opcional: pode usar o mesmo raio do botão real */
     flex-shrink: 0;
 }
+
+.skeleton-line.header-title {
+    width: 250px;
+    height: 30px; /* Mais alto para corresponder ao h2 */
+}
+
+.skeleton-line.header-button {
+    width: 100px;
+    height: 20px;
+}
