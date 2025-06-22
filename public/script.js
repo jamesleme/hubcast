@@ -32,8 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---- LÓGICA DA API (MODELO PROXY) COM BUSCA DE LOGOS E SKELETON MELHORADO ----
 
     // 1. CONFIGURAÇÃO
-    const MAX_LIVES_TO_SHOW = 3;
-    const MAX_COMPLETED_TO_SHOW = 3;
+    const MAX_LIVES_TO_SHOW = 1;
+    const MAX_COMPLETED_TO_SHOW = 1;
 
     // Lista de canais que você quer monitorar. A chave da API fica segura no seu servidor.
     const CHANNEL_IDS_TO_MONITOR = [
