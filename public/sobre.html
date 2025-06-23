@@ -1,0 +1,91 @@
+<!-- Em contato.html -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre - hubcast.</title> <!-- Mude o título da página -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Links para fontes e ícones (iguais ao index.html) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+    <main class="container">
+        <!-- COPIE O CABEÇALHO (HEADER) DO SEU INDEX.HTML PARA CÁ -->
+        <header class="main-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h1>hubcast<span class="gradient-text">.</span></h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="sobre.html" class="active">Sobre</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" title="Alternar tema">
+                    <i id="theme-icon" class="bi bi-lightbulb-fill"></i>
+                </button>
+            </div>
+        </header>
+
+        <section id="live-section-banner">
+            <div class="live-banner">
+            </div>
+        </section>
+
+        <!-- ==== CONTEÚDO DA PÁGINA DE CONTATO ==== -->
+        <section id="contact-section" style="margin-top: 50px;">
+            <div class="section-header">
+                <div class="logo"><h2>sobre</h2></div>
+            </div>
+            <p style="text-align: left; margin-top: 20px;">
+                <br/>
+                Nosso objetivo é tornar mais fácil para você acompanhar e descobrir o que há de mais atual e relevante nos podcasts. Por aqui, reunimos as principais transmissões ao vivo para que você não perca nenhum episódio enquanto está acontecendo.
+                <br/><br/>
+                Além das transmissões, você também pode conferir todos os episódios que acabaram de acontecer, além de acessar a agenda dos próximos episódios que estao por vir. Seja para acompanhar as últimas notícias, debates, entrevistas ou simplesmente para conhecer novas vozes e conteúdos, o <b>hubcast</b> foi pensado para facilitar a sua experiência e ajudá‑lo a aproveitar ao máximo todas as opções.
+                <br/><br/>
+                Explore, descubra e aproveite!
+            </p>
+            <!-- Você pode adicionar um formulário de contato aqui no futuro -->
+        </section>
+
+    </main>
+
+    <!-- COPIE O RODAPÉ (FOOTER) DO SEU INDEX.HTML PARA CÁ -->
+    <footer class="main-footer-container">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <p class="footer-logo">hubcast.</p>
+                <p class="footer-copyright">© <span id="current-year"></span> Hubcast. Todos os direitos reservados.</p>
+            </div>
+            <div class="footer-right">
+                <nav class="footer-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Sobre</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </nav>
+                <div class="footer-social">
+                    <a href="#" title="Twitter / X"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/jamesleme/hubcast" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Importante: O script.js também é necessário para o tema e o ano funcionarem -->
+    <script src="script.js"></script>
+</body>
+</html>
