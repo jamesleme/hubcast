@@ -69,17 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Aplica Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton-header-title shimmer-effect"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer-effect"></span>`;
+        titleElement.innerHTML = `<span class="skeleton-header-title shimmer"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer"></span>`;
         listContainer.innerHTML = `
-        <div class="skeleton-card">
-            <div class="skeleton-logo-placeholder shimmer-effect"></div>
-            <div class="skeleton-info-placeholder">
-                <div class="skeleton-line title shimmer-effect"></div>
-                <div class="skeleton-line channel shimmer-effect"></div>
+            <div class="skeleton-card">
+                <div class="skeleton-logo-placeholder shimmer"></div>
+                <div class="skeleton-info-placeholder">
+                    <div class="skeleton-line title shimmer"></div>
+                    <div class="skeleton-line channel shimmer"></div>
+                </div>
+                <div class="skeleton-button-placeholder shimmer"></div>
             </div>
-            <div class="skeleton-button-placeholder shimmer-effect"></div>
-        </div>
         `.repeat(MAX_LIVES_TO_SHOW);
 
         // Busca Dados
@@ -111,17 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Aplica Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton-header-title shimmer-effect"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer-effect"></span>`;
+        titleElement.innerHTML = `<span class="skeleton-header-title shimmer"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer"></span>`;
         listContainer.innerHTML = `
-        <div class="skeleton-card">
-            <div class="skeleton-logo-placeholder shimmer-effect"></div>
-            <div class="skeleton-info-placeholder">
-                <div class="skeleton-line title shimmer-effect"></div>
-                <div class="skeleton-line channel shimmer-effect"></div>
+            <div class="skeleton-card">
+                <div class="skeleton-logo-placeholder shimmer"></div>
+                <div class="skeleton-info-placeholder">
+                    <div class="skeleton-line title shimmer"></div>
+                    <div class="skeleton-line channel shimmer"></div>
+                </div>
+                <div class="skeleton-button-placeholder shimmer"></div>
             </div>
-            <div class="skeleton-button-placeholder shimmer-effect"></div>
-        </div>
         `.repeat(MAX_COMPLETED_TO_SHOW);
         
         // Busca Dados

@@ -420,49 +420,38 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 
 /* ---- SKELETON LOADING ---- */
 
-/* O card esqueleto principal. Tem a mesma estrutura de layout que os cards reais. */
+/* O card esqueleto principal. Apenas estrutura. */
 .skeleton-card {
     display: flex;
     align-items: center;
     gap: 20px;
     padding: 35px 45px;
-    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
     box-shadow: -7px 7px 0 1px var(--bg-secondary);
     transform: skew(5deg, -2.5deg);
-    overflow: hidden; /* Garante que o brilho não vaze para fora */
 }
 
-/* A animação de brilho */
-.shimmer-effect {
-    position: relative;
-    background-color: var(--bg-secondary);
+/* A classe mágica do shimmer. Pode ser aplicada a qualquer elemento. */
+.shimmer {
+    animation: shimmer-animation 2s infinite linear;
+    background: linear-gradient(to right,
+        var(--bg-secondary) 8%,
+        var(--border-color) 18%,
+        var(--bg-secondary) 33%);
+    background-size: 1200px 100%; /* Tamanho grande para o gradiente poder deslizar */
 }
 
-.shimmer-effect::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -150%;
-    width: 150%;
-    height: 100%;
-    background: linear-gradient(to right, 
-        transparent 0%, 
-        var(--border-color) 50%, 
-        transparent 100%);
-    animation: shimmer 1.5s infinite linear;
-}
-
-@keyframes shimmer {
-    from {
-        left: -150%;
+@keyframes shimmer-animation {
+    0% {
+        background-position: -1200px 0;
     }
-    to {
-        left: 150%;
+    100% {
+        background-position: 1200px 0;
     }
 }
 
-/* Os elementos placeholder dentro do card */
+/* Estrutura e tamanho dos placeholders */
 .skeleton-logo-placeholder {
     width: 60px;
     height: 60px;
