@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'UCoB84QGiiwV3c01m_G34S7A', // Ticaracaticast
         'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
         'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sports CLub
+        'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
     ];
 
     // 2. FUNÇÕES DE API GENÉRICAS
