@@ -40,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_LIVES_TO_SHOW = 3;
     const MAX_COMPLETED_TO_SHOW = 3;
 
+    // Constantes exclusivas para a quantidade de skeletons
+    const SKELETONS_FOR_LIVE = 1;      // Quantos SKELETONS mostrar na seção "Ao Vivo"
+    const SKELETONS_FOR_COMPLETED = 1; // Quantos SKELETONS mostrar na seção "Concluídos"
+
     const CHANNEL_IDS_TO_MONITOR = [
         'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
     ];
@@ -80,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="skeleton-button-placeholder shimmer"></div>
             </div>
-        `.repeat(MAX_LIVES_TO_SHOW);
+        `.repeat(SKELETONS_FOR_LIVE);
 
         // Busca Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`));
@@ -122,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div class="skeleton-button-placeholder shimmer"></div>
             </div>
-        `.repeat(MAX_COMPLETED_TO_SHOW);
+        `.repeat(SKELETONS_FOR_COMPLETED);
         
         // Busca Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=completed`));
