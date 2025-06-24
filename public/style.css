@@ -420,79 +420,97 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 
 /* ---- SKELETON LOADING ---- */
 
-/* A animação de brilho (shimmer) permanece a mesma */
-@keyframes shimmer {
-    0% { background-position: -468px 0; }
-    100% { background-position: 468px 0; }
+/* O card esqueleto principal. Tem a mesma estrutura de layout que os cards reais. */
+.skeleton-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 35px 45px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: -7px 7px 0 1px var(--bg-secondary);
+    transform: skew(5deg, -2.5deg);
+    overflow: hidden; /* Garante que o brilho não vaze para fora */
 }
 
-/* Base para qualquer elemento skeleton */
-.skeleton {
-    background-color: var(--border-color); /* Cor base do skeleton */
+/* A animação de brilho */
+.shimmer-effect {
     position: relative;
-    overflow: hidden;
+    background-color: var(--bg-secondary);
 }
 
-/* Aplica a animação de brilho */
-.skeleton::before {
+.shimmer-effect::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: -150%;
+    width: 150%;
     height: 100%;
-    /* O gradiente que cria o efeito de brilho */
     background: linear-gradient(to right, 
         transparent 0%, 
-        var(--bg-secondary) 50%, 
-        transparent 100%
-    );
+        var(--border-color) 50%, 
+        transparent 100%);
     animation: shimmer 1.5s infinite linear;
 }
 
-/* Estilos específicos para cada parte do skeleton */
-.skeleton-circle {
+@keyframes shimmer {
+    from {
+        left: -150%;
+    }
+    to {
+        left: 150%;
+    }
+}
+
+/* Os elementos placeholder dentro do card */
+.skeleton-logo-placeholder {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     flex-shrink: 0;
 }
 
-.skeleton-info {
+.skeleton-info-placeholder {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Espaçamento entre as linhas de texto do skeleton */
+    gap: 10px;
 }
 
 .skeleton-line {
-    height: 16px;
+    height: 20px;
     border-radius: 4px;
 }
+
 .skeleton-line.title {
-    height: 20px;
-    width: 85%; /* Linha do título é mais longa */
+    width: 90%;
 }
+
 .skeleton-line.channel {
-    width: 45%; /* Linha do nome do canal é mais curta */
+    width: 60%;
+    height: 16px;
 }
 
-.skeleton-button {
-    margin-left: auto; /* Empurra o botão para a direita */
-    width: 100px;
+.skeleton-button-placeholder {
+    width: 90px;
     height: 35px;
-    border-radius: 4px; /* Opcional: pode usar o mesmo raio do botão real */
-    flex-shrink: 0;
+    border-radius: 4px;
+    margin-left: auto;
 }
 
-.skeleton-line.header-title {
-    width: 250px;
-    height: 30px; /* Mais alto para corresponder ao h2 */
-    display: inline-block; /* Garante que o span tenha dimensões */
+/* Skeletons dos cabeçalhos */
+.skeleton-header-title {
+    display: inline-block;
+    width: 220px;
+    height: 30px;
+    border-radius: 6px;
+    vertical-align: middle;
 }
 
-.skeleton-line.header-button {
-    width: 100px;
-    height: 20px;
-    display: inline-block; /* Garante que o span tenha dimensões */
+.skeleton-header-button {
+    display: inline-block;
+    width: 85px;
+    height: 22px;
+    border-radius: 4px;
+    vertical-align: middle;
 }
