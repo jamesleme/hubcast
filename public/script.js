@@ -69,9 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Aplica Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
-        listContainer.innerHTML = `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_LIVES_TO_SHOW);
+        titleElement.innerHTML = `<span class="skeleton-header-title shimmer-effect"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer-effect"></span>`;
+        listContainer.innerHTML = `
+        <div class="skeleton-card">
+            <div class="skeleton-logo-placeholder shimmer-effect"></div>
+            <div class="skeleton-info-placeholder">
+                <div class="skeleton-line title shimmer-effect"></div>
+                <div class="skeleton-line channel shimmer-effect"></div>
+            </div>
+            <div class="skeleton-button-placeholder shimmer-effect"></div>
+        </div>
+        `.repeat(MAX_LIVES_TO_SHOW);
 
         // Busca Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`));
@@ -102,9 +111,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Aplica Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
-        listContainer.innerHTML = `<div class="completed-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_COMPLETED_TO_SHOW);
+        titleElement.innerHTML = `<span class="skeleton-header-title shimmer-effect"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer-effect"></span>`;
+        listContainer.innerHTML = `
+        <div class="skeleton-card">
+            <div class="skeleton-logo-placeholder shimmer-effect"></div>
+            <div class="skeleton-info-placeholder">
+                <div class="skeleton-line title shimmer-effect"></div>
+                <div class="skeleton-line channel shimmer-effect"></div>
+            </div>
+            <div class="skeleton-button-placeholder shimmer-effect"></div>
+        </div>
+        `.repeat(MAX_COMPLETED_TO_SHOW);
         
         // Busca Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=completed`));
