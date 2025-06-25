@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // ---- LÓGICA DA API (REESTRUTURADA PARA INDEPENDÊNCIA) ----
+    // ---- LÓGICA DA API (REESTRUTURADA PARA ISOLAMENTO TOTAL) ----
 
     // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
@@ -43,53 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const CHANNEL_IDS_TO_MONITOR = [
         'UC4_bL9_p3s01K_T1aG8m1dA', // Podpah
         'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
-        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sports CLub
+        'UCk107Q3h57M3G1_d2Q3E1DQ'  // Flow Sports CLub
     ];
 
-    // 2. FUNÇÕES DE API GENÉRICAS E CACHE DE LOGOS
-    const logoCache = new Map(); // Cache para armazenar os logos já buscados
-
+    // 2. FUNÇÃO DE API GENÉRICA
     async function fetchFromApi(url) {
         try {
             const cacheBustUrl = `${url}&_=${new Date().getTime()}`;
             const response = await fetch(cacheBustUrl);
             if (!response.ok) {
-                if (response.status === 403) {
-                    console.error(`Erro 403 (Quota Excedida?) ao acessar ${url}.`);
-                    return { items: [] };
-                }
-                throw new Error(`HTTP error! status: ${response.status}`);
+                if (response.status === 403) console.error(`Erro 403 (Quota Excedida?) ao acessar ${url}.`);
+                return { items: [] };
             }
             return response.json();
         } catch (error) {
-            console.error(`Falha final ao fazer fetch da URL: ${url}`, error);
+            console.error(`Falha ao fazer fetch da URL: ${url}`, error);
             return { items: [] };
         }
     }
-    
-    // NOVA FUNÇÃO OTIMIZADA PARA BUSCAR LOGOS
-    async function getChannelLogos(channelIds) {
-        // Filtra para buscar apenas os logos que ainda não estão no cache
-        const idsToFetch = channelIds.filter(id => !logoCache.has(id));
 
-        if (idsToFetch.length === 0) {
-            return logoCache; // Retorna o cache se todos os logos já foram buscados
-        }
-
-        const apiUrl = `/api/channels?ids=${idsToFetch.join(',')}`;
-        const data = await fetchFromApi(apiUrl);
-        
-        if (data.items) {
-            data.items.forEach(channel => {
-                // Armazena o logo no cache para futuras requisições
-                logoCache.set(channel.id, channel.snippet.thumbnails.default.url);
-            });
-        }
-        return logoCache;
-    }
-
-
-    // 3. LÓGICA DA SEÇÃO "AO VIVO"
+    // 3. LÓGICA DA SEÇÃO "AO VIVO" - TOTALMENTE INDEPENDENTE
     async function initializeLiveSection() {
         const section = document.getElementById('live-channels-section');
         const listContainer = section.querySelector('.live-list');
@@ -103,18 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
         listContainer.innerHTML = `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_LIVES_TO_SHOW);
 
-        // Passo 2: Buscar Dados
+        // Passo 2: Buscar Dados de Vídeos Ao Vivo
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`));
         const results = await Promise.all(promises);
         const liveVideos = results.flatMap(result => result.items || []).slice(0, MAX_LIVES_TO_SHOW);
 
         // Passo 3: Renderizar ou Esconder
         if (liveVideos.length > 0) {
+            // Passo 3.1: Buscar os logos APENAS para os vídeos encontrados
             const channelIdsForLogos = liveVideos.map(video => video.snippet.channelId);
-            const logoMap = await getChannelLogos(channelIdsForLogos);
+            const logoData = await fetchFromApi(`/api/channels?ids=${channelIdsForLogos.join(',')}`);
+            const logoMap = new Map();
+            if(logoData.items) {
+                logoData.items.forEach(channel => logoMap.set(channel.id, channel.snippet.thumbnails.default.url));
+            }
 
+            // Passo 3.2: Gerar o HTML final
             const liveItemsHTML = liveVideos.map(video => {
-                const logoUrl = logoMap.get(video.snippet.channelId) || 'placeholder.png'; // Fallback
+                const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png'; // Fallback
                 return `<div class="live-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
             }).join('');
             
@@ -126,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 4. LÓGICA DA SEÇÃO "CONCLUÍDOS"
+    // 4. LÓGICA DA SEÇÃO "CONCLUÍDOS" - TOTALMENTE INDEPENDENTE
     async function initializeCompletedSection() {
         const section = document.getElementById('completed-section');
         const listContainer = section.querySelector('.completed-list');
@@ -140,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
         listContainer.innerHTML = `<div class="completed-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_COMPLETED_TO_SHOW);
         
-        // Passo 2: Buscar Dados
+        // Passo 2: Buscar Dados de Vídeos Concluídos
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=completed`));
         const results = await Promise.all(promises);
         let allCompletedVideos = results.flatMap(result => result.items || []);
@@ -150,11 +129,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Passo 3: Renderizar ou Esconder
         if (latestCompleted.length > 0) {
+            // Passo 3.1: Buscar os logos APENAS para os vídeos encontrados
             const channelIdsForLogos = latestCompleted.map(video => video.snippet.channelId);
-            const logoMap = await getChannelLogos(channelIdsForLogos);
+            const logoData = await fetchFromApi(`/api/channels?ids=${channelIdsForLogos.join(',')}`);
+            const logoMap = new Map();
+            if(logoData.items) {
+                logoData.items.forEach(channel => logoMap.set(channel.id, channel.snippet.thumbnails.default.url));
+            }
 
+            // Passo 3.2: Gerar o HTML final
             const completedItemsHTML = latestCompleted.map(video => {
-                const logoUrl = logoMap.get(video.snippet.channelId) || 'placeholder.png'; // Fallback
+                const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png'; // Fallback
                 return `<div class="completed-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`;
             }).join('');
             
@@ -167,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. INICIALIZAÇÃO
+    // Chama cada função de forma independente. O resultado de uma não afeta a outra.
     initializeLiveSection();
     initializeCompletedSection();
 });
