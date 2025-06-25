@@ -38,10 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
-    const MAX_COMPLETED_TO_SHOW = 5; // Aumentado para um exemplo mais realista
+    const MAX_COMPLETED_TO_SHOW = 3;
 
     const CHANNEL_IDS_TO_MONITOR = [
         'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
+        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sports CLub
     ];
 
     // 2. FUNÇÕES DE API GENÉRICAS E CACHE DE LOGOS
