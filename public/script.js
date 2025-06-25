@@ -34,34 +34,58 @@ document.addEventListener('DOMContentLoaded', () => {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // ---- LÓGICA DA API (ESTRUTURA INDEPENDENTE) ----
+    // ---- LÓGICA DA API (REESTRUTURADA PARA INDEPENDÊNCIA) ----
 
     // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
-    const MAX_COMPLETED_TO_SHOW = 3;
-
-    // Constantes exclusivas para a quantidade de skeletons
-    const SKELETONS_FOR_LIVE = 1;      // Quantos SKELETONS mostrar na seção "Ao Vivo"
-    const SKELETONS_FOR_COMPLETED = 1; // Quantos SKELETONS mostrar na seção "Concluídos"
+    const MAX_COMPLETED_TO_SHOW = 5; // Aumentado para um exemplo mais realista
 
     const CHANNEL_IDS_TO_MONITOR = [
         'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
     ];
 
-    // 2. FUNÇÃO DE API GENÉRICA
+    // 2. FUNÇÕES DE API GENÉRICAS E CACHE DE LOGOS
+    const logoCache = new Map(); // Cache para armazenar os logos já buscados
+
     async function fetchFromApi(url) {
         try {
-            const response = await fetch(url);
+            const cacheBustUrl = `${url}&_=${new Date().getTime()}`;
+            const response = await fetch(cacheBustUrl);
             if (!response.ok) {
-                console.error(`HTTP error! Status: ${response.status} para a URL: ${url}`);
-                return { items: [] }; // Retorna vazio para não quebrar a lógica
+                if (response.status === 403) {
+                    console.error(`Erro 403 (Quota Excedida?) ao acessar ${url}.`);
+                    return { items: [] };
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         } catch (error) {
-            console.error(`Falha de rede ao fazer fetch da URL: ${url}`, error);
-            return { items: [] }; // Retorna vazio em caso de falha de rede
+            console.error(`Falha final ao fazer fetch da URL: ${url}`, error);
+            return { items: [] };
         }
     }
+    
+    // NOVA FUNÇÃO OTIMIZADA PARA BUSCAR LOGOS
+    async function getChannelLogos(channelIds) {
+        // Filtra para buscar apenas os logos que ainda não estão no cache
+        const idsToFetch = channelIds.filter(id => !logoCache.has(id));
+
+        if (idsToFetch.length === 0) {
+            return logoCache; // Retorna o cache se todos os logos já foram buscados
+        }
+
+        const apiUrl = `/api/channels?ids=${idsToFetch.join(',')}`;
+        const data = await fetchFromApi(apiUrl);
+        
+        if (data.items) {
+            data.items.forEach(channel => {
+                // Armazena o logo no cache para futuras requisições
+                logoCache.set(channel.id, channel.snippet.thumbnails.default.url);
+            });
+        }
+        return logoCache;
+    }
+
 
     // 3. LÓGICA DA SEÇÃO "AO VIVO"
     async function initializeLiveSection() {
@@ -70,31 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const titleElement = section.querySelector('h2');
         const buttonElement = section.querySelector('.see-all-btn');
 
-        // Aplica Skeletons
+        // Passo 1: Aplicar Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton-header-title shimmer"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer"></span>`;
-        listContainer.innerHTML = `
-            <div class="skeleton-card">
-                <div class="skeleton-logo-placeholder shimmer"></div>
-                <div class="skeleton-info-placeholder">
-                    <div class="skeleton-line title shimmer"></div>
-                    <div class="skeleton-line channel shimmer"></div>
-                </div>
-                <div class="skeleton-button-placeholder shimmer"></div>
-            </div>
-        `.repeat(SKELETONS_FOR_LIVE);
+        titleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
+        listContainer.innerHTML = `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_LIVES_TO_SHOW);
 
-        // Busca Dados
+        // Passo 2: Buscar Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`));
         const results = await Promise.all(promises);
         const liveVideos = results.flatMap(result => result.items || []).slice(0, MAX_LIVES_TO_SHOW);
 
-        // Renderiza ou Esconde
+        // Passo 3: Renderizar ou Esconder
         if (liveVideos.length > 0) {
+            const channelIdsForLogos = liveVideos.map(video => video.snippet.channelId);
+            const logoMap = await getChannelLogos(channelIdsForLogos);
+
             const liveItemsHTML = liveVideos.map(video => {
-                return `<div class="live-item"><div class="channel-logo-circle"><img src="${video.snippet.thumbnails.default.url}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
+                const logoUrl = logoMap.get(video.snippet.channelId) || 'placeholder.png'; // Fallback
+                return `<div class="live-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
             }).join('');
             
             listContainer.innerHTML = liveItemsHTML;
@@ -112,23 +131,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const titleElement = section.querySelector('h2');
         const buttonElement = section.querySelector('.see-all-btn');
 
-        // Aplica Skeletons
+        // Passo 1: Aplicar Skeletons
         const originalTitle = titleElement.innerHTML;
         const originalButton = buttonElement.innerHTML;
-        titleElement.innerHTML = `<span class="skeleton-header-title shimmer"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton-header-button shimmer"></span>`;
-        listContainer.innerHTML = `
-            <div class="skeleton-card">
-                <div class="skeleton-logo-placeholder shimmer"></div>
-                <div class="skeleton-info-placeholder">
-                    <div class="skeleton-line title shimmer"></div>
-                    <div class="skeleton-line channel shimmer"></div>
-                </div>
-                <div class="skeleton-button-placeholder shimmer"></div>
-            </div>
-        `.repeat(SKELETONS_FOR_COMPLETED);
+        titleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
+        buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
+        listContainer.innerHTML = `<div class="completed-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_COMPLETED_TO_SHOW);
         
-        // Busca Dados
+        // Passo 2: Buscar Dados
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=completed`));
         const results = await Promise.all(promises);
         let allCompletedVideos = results.flatMap(result => result.items || []);
@@ -136,10 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
         allCompletedVideos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
         const latestCompleted = allCompletedVideos.slice(0, MAX_COMPLETED_TO_SHOW);
 
-        // Renderiza ou Esconde
+        // Passo 3: Renderizar ou Esconder
         if (latestCompleted.length > 0) {
+            const channelIdsForLogos = latestCompleted.map(video => video.snippet.channelId);
+            const logoMap = await getChannelLogos(channelIdsForLogos);
+
             const completedItemsHTML = latestCompleted.map(video => {
-                return `<div class="completed-item"><div class="channel-logo-circle"><img src="${video.snippet.thumbnails.default.url}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`;
+                const logoUrl = logoMap.get(video.snippet.channelId) || 'placeholder.png'; // Fallback
+                return `<div class="completed-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i>ASSISTIR</a></div>`;
             }).join('');
             
             listContainer.innerHTML = completedItemsHTML;
@@ -151,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. INICIALIZAÇÃO
-    // Chama cada função de forma independente.
     initializeLiveSection();
     initializeCompletedSection();
 });
