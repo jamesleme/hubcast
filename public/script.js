@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const CHANNEL_IDS_TO_MONITOR = [
         'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
+        'UCY8iijN1AkyDCh1Z9akcqUA', // Funky
     ];
 
     // 2. FUNÇÃO DE API GENÉRICA
