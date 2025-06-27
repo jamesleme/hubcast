@@ -64,8 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_COMPLETED_TO_SHOW = 3;
 
     const CHANNEL_IDS_TO_MONITOR = [
-        'UCs-6sCz2LJm1PrWQN4ErsPw', // TNT
-        'UCY8iijN1AkyDCh1Z9akcqUA', // Funky
+        'UCK7bm74oRVnp_PXDfF2S1sA', // mount
     ];
 
     // 2. FUNÇÃO DE API GENÉRICA
