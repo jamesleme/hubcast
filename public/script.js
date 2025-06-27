@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. CONFIGURAÇÃO
     const MAX_LIVES_TO_SHOW = 3;
     const MAX_COMPLETED_TO_SHOW = 3;
+    const SKELETONS_TO_SHOW = 1;
 
     const CHANNEL_IDS_TO_MONITOR = [
         'UCK7bm74oRVnp_PXDfF2S1sA', // mount
@@ -95,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const originalButton = buttonElement.innerHTML;
         titleElement.innerHTML = `<span class="skeleton skeleton-line header-title"></span>`;
         buttonElement.innerHTML = `<span class="skeleton skeleton-line header-button"></span>`;
-        listContainer.innerHTML = `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(MAX_LIVES_TO_SHOW);
+        listContainer.innerHTML = `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`.repeat(SKELETONS_TO_SHOW);
 
         // Passo 2: Buscar Dados de Vídeos Ao Vivo
         const promises = CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`));
