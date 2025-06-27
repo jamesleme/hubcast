@@ -28,6 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
+    // ---- LÓGICA DO SELETOR DE IDIOMA LOCAL ----
+    const langSwitchContainer = document.querySelector('.local-lang-switch');
+
+    // Só executa o código se o seletor de idiomas estiver na página atual
+    if (langSwitchContainer) {
+        const langButtons = langSwitchContainer.querySelectorAll('[data-lang-btn]');
+        const langSections = document.querySelectorAll('[data-lang-section]');
+
+        langButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedLang = button.dataset.langBtn;
+
+                // Remove a classe 'active' de todos os botões e seções
+                langButtons.forEach(btn => btn.classList.remove('active'));
+                langSections.forEach(sec => sec.classList.remove('lang-active'));
+
+                // Adiciona a classe 'active' ao botão clicado e à seção correspondente
+                button.classList.add('active');
+                document.querySelector(`[data-lang-section="${selectedLang}"]`).classList.add('lang-active');
+            });
+        });
+    }
+
     // ---- LÓGICA DO ANO DO RODAPÉ ----
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {

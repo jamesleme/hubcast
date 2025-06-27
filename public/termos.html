@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Termos de Uso - hubcast.</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Importando a fonte Sen do Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Importando ícones do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+    <main class="container">
+        <header class="main-header">
+            <div class="header-left">
+                <div class="logo">
+                    <h1>hubcast<span class="gradient-text">.</span></h1>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="/sobre.html">Sobre</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="header-right">
+                <button id="theme-toggle" title="Alternar tema">
+                    <i id="theme-icon" class="bi bi-lightbulb-fill"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- CONTEÚDO DA PÁGINA DE TERMOS -->
+        <div class="text-page-container">
+    
+            <!-- SELETOR DE IDIOMAS LOCAL -->
+            <div class="local-lang-switch">
+                <button data-lang-btn="pt" class="active">Português</button>
+                <button data-lang-btn="en">English</button>
+            </div>
+        
+            <!-- CONTEÚDO EM PORTUGUÊS -->
+            <div data-lang-section="pt" class="lang-active">
+                <h2>Termos de Uso</h2>
+                <p>Última atualização: 27 de Junho de 2025</p>
+                <br>
+                <p>Ao acessar e utilizar o hubcast, você concorda em cumprir e se vincular aos seguintes termos e condições de uso. Por favor, leia estes termos cuidadosamente.</p>
+                
+                <h3>Uso dos Serviços do YouTube</h3>
+                <p>O hubcast utiliza os Serviços de API do YouTube para buscar e exibir informações públicas sobre conteúdo de vídeo, como transmissões ao vivo e vídeos concluídos. Nossa funcionalidade depende da API do YouTube para fornecer dados atualizados aos nossos usuários.</p>
+                <p>Ao utilizar nosso serviço, você reconhece e concorda que está se vinculando também aos <strong><a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">Termos de Serviço do YouTube</a></strong>.</p>
+                
+                <h3>Limitação de Responsabilidade</h3>
+                <p>As informações exibidas no hubcast são fornecidas "como estão", baseadas nos dados públicos disponibilizados pela API do YouTube. Não garantimos a precisão, pontualidade ou integridade de qualquer informação em nosso site e não nos responsabilizamos por quaisquer erros ou omissões.</p>
+            </div>
+        
+            <!-- CONTEÚDO EM INGLÊS -->
+            <div data-lang-section="en">
+                <h2>Terms of Use</h2>
+                <p>Last updated: June 27, 2025</p>
+                <br>
+                <p>By accessing and using hubcast, you agree to comply with and be bound by the following terms and conditions of use. Please review these terms carefully.</p>
+                
+                <h3>Use of YouTube API Services</h3>
+                <p>Hubcast uses the YouTube API Services to fetch and display public information about video content, such as live streams and completed videos. Our functionality relies on the YouTube API to provide up-to-date data to our users.</p>
+                <p>By using our service, you acknowledge and agree that you are also bound by the <strong><a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer">YouTube Terms of Service</a></strong>.</p>
+
+                <h3>Limitation of Liability</h3>
+                <p>The information displayed on hubcast is provided "as is," based on public data made available by the YouTube API. We do not guarantee the accuracy, timeliness, or completeness of any information on our site and are not liable for any errors or omissions.</p>
+            </div>
+        
+        </div>
+
+    </main>
+
+    <footer class="main-footer-container">
+        <div class="container footer-content">
+            <div class="footer-left">
+                <p class="footer-logo">hubcast.</p>
+                <p class="footer-copyright">© <span id="current-year"></span> Hubcast. Todos os direitos reservados.</p>
+            </div>
+            <div class="footer-right">
+                <nav class="footer-nav">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                        <li><a href="termos.html">Termos de Uso</a></li>
+                        <li><a href="privacidade.html">Privacidade</a></li>
+                    </ul>
+                </nav>
+                <div class="footer-social">
+                    <a href="#" title="Twitter / X"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/jamesleme/hubcast" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -277,6 +277,57 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; }
 .podcast-name { color: var(--text-primary); font-weight: 600; font-size: 0.9rem; text-align: center; }
 
+/* ============================================== */
+/* ==== ESTILOS PARA PÁGINAS DE TEXTO (LEGAL) ==== */
+/* ============================================== */
+.text-page-container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 40px 50px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.text-page-container h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--accent-cyan);
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.text-page-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.text-page-container p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.text-page-container a {
+    color: var(--accent-cyan);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px dotted var(--accent-cyan);
+    transition: color 0.2s, border-bottom-color 0.2s;
+}
+
+.text-page-container a:hover {
+    color: var(--live-red);
+    border-bottom-color: var(--live-red);
+}
+
 /* 4. LISTA DE CATEGORIAS (SIDEBAR) */
 #categories-section {
     padding: 22px 20px;
@@ -418,8 +469,41 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
     }
 }
 
-/* ---- SKELETON LOADING ---- */
+/* ---- ESTILO DO SELETOR DE IDIOMAS LOCAL ---- */
+.local-lang-switch {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 25px;
+    display: inline-flex;
+    gap: 5px;
+}
 
+.local-lang-switch button {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 5px;
+    color: var(--text-secondary);
+    transition: background-color 0.2s, color 0.2s;
+    font-family: 'Sen', sans-serif;
+}
+
+.local-lang-switch button.active {
+    background-color: var(--accent-cyan);
+    color: #fff;
+}
+
+/* Classe para esconder o idioma inativo (mesma de antes) */
+[data-lang-section]:not(.lang-active) {
+    display: none;
+}
+
+/* ---- SKELETON LOADING ---- */
 /* O card esqueleto principal. Apenas estrutura. */
 .skeleton-card {
     display: flex;
