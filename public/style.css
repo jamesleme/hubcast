@@ -281,13 +281,11 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 /* ==== ESTILOS PARA PÁGINAS DE TEXTO (LEGAL) ==== */
 /* ============================================== */
 .text-page-container {
+    padding: 35px 45px;
     background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 15px;
-    padding: 40px 50px;
-    margin-top: 40px;
-    margin-bottom: 40px;
-    box-shadow: 0 4px 12px var(--shadow-color);
+    box-shadow: -7px 7px 0 1px var(--card-shadow);
+    border: 1px solid var(--card-border);
+    margin: 40px 0;
 }
 
 .text-page-container h1 {
@@ -326,6 +324,37 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
 .text-page-container a:hover {
     color: var(--live-red);
     border-bottom-color: var(--live-red);
+}
+
+/* ---- ESTILO DO SELETOR DE IDIOMAS LOCAL ---- */
+.local-lang-switch {
+    background-color: var(--bg-secondary);
+    padding: 5px;
+    margin-bottom: 25px;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.local-lang-switch button {
+    background: none;
+    border: none;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: background-color 0.2s, color 0.2s;
+    font-family: 'Sen', sans-serif;
+}
+
+.local-lang-switch button.active {
+    background-color: var(--accent-cyan);
+    color: #fff;
+}
+
+/* Classe para esconder o idioma inativo (mesma de antes) */
+[data-lang-section]:not(.lang-active) {
+    display: none;
 }
 
 /* 4. LISTA DE CATEGORIAS (SIDEBAR) */
@@ -467,40 +496,6 @@ body { background-color: var(--bg-primary); color: var(--text-primary); font-fam
         flex-direction: column;
         gap: 30px;
     }
-}
-
-/* ---- ESTILO DO SELETOR DE IDIOMAS LOCAL ---- */
-.local-lang-switch {
-    background-color: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 5px;
-    margin-bottom: 25px;
-    display: inline-flex;
-    gap: 5px;
-}
-
-.local-lang-switch button {
-    background: none;
-    border: none;
-    padding: 8px 15px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    border-radius: 5px;
-    color: var(--text-secondary);
-    transition: background-color 0.2s, color 0.2s;
-    font-family: 'Sen', sans-serif;
-}
-
-.local-lang-switch button.active {
-    background-color: var(--accent-cyan);
-    color: #fff;
-}
-
-/* Classe para esconder o idioma inativo (mesma de antes) */
-[data-lang-section]:not(.lang-active) {
-    display: none;
 }
 
 /* ---- SKELETON LOADING ---- */
