@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = document.getElementById('theme-icon');
     const currentTheme = localStorage.getItem('theme');
+
     const applyTheme = (theme) => {
         if (theme === 'dark') {
             document.body.classList.add('dark-mode');
@@ -14,11 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
             themeIcon.classList.add('bi-lightbulb-fill');
         }
     };
+
     if (currentTheme) {
         applyTheme(currentTheme);
     } else {
         themeIcon.classList.add('bi-lightbulb-fill');
     }
+
     themeToggle.addEventListener('click', () => {
         let newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
         applyTheme(newTheme);
@@ -31,12 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
         yearSpan.textContent = new Date().getFullYear();
     }
 
-    // ---- VARIÁVEIS E FUNÇÕES GLOBAIS DA API ----
+    // ---- VARIÁVEIS ----
     const CHANNEL_IDS_TO_MONITOR = [
         'UCs-6sCz2LJm1PrWQN4ErsPw', // tnt
         'UCxERJM046RIRgl5cH-ss3yw', // CNN
     ];
 
+    // ---- API UNIVERSAL ----
     async function fetchFromApi(url) {
         try {
             const cacheBustUrl = `${url}&_=${new Date().getTime()}`;
@@ -49,105 +53,151 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ---- FUNÇÃO GENÉRICA PARA RENDERIZAR UMA SEÇÃO ----
-    async function renderSection({ sectionId, listSelector, eventType, limit, skeletonCount, renderFunction }) {
-        const section = document.getElementById(sectionId);
-        if (!section) return;
+    // ---- RENDER LIVES ----
+    async function renderLiveVideos(containerSelector, limit = null) {
+        const listContainer = document.querySelector(containerSelector);
+        const section = listContainer.closest('section');
+        const header = section?.querySelector('.section-header');
+        const title = header?.querySelector('h2');
+        const button = header?.querySelector('.see-all-btn');
 
-        const listContainer = section.querySelector(listSelector);
-        const titleElement = section.querySelector('h2');
-        const buttonElement = section.querySelector('.see-all-btn');
+        const originalTitle = title?.innerHTML;
+        const originalButton = button?.innerHTML;
 
-        // 1. APLICAR SKELETONS
-        titleElement.innerHTML = `<span class="skeleton-title shimmer-bg"></span>`;
-        buttonElement.innerHTML = `<span class="skeleton-button-small shimmer-bg"></span>`;
-        listContainer.innerHTML = renderFunction(null).repeat(skeletonCount);
+        // Skeleton no título e botão
+        if (title) title.innerHTML = `<span class="skeleton-title shimmer-bg"></span>`;
+        if (button) button.innerHTML = `<span class="skeleton-button-small shimmer-bg"></span>`;
 
-        // 2. BUSCAR DADOS
-        const results = await Promise.all(
-            CHANNEL_IDS_TO_MONITOR.map(id => fetchFromApi(`/api/youtube?channelId=${id}&eventType=${eventType}`))
-        );
+        // Skeleton no conteúdo
+        listContainer.innerHTML = `<div class="live-item skeleton-item">
+            <div class="skeleton-logo shimmer-bg"></div>
+            <div class="item-info">
+                <div class="skeleton-text shimmer-bg"></div>
+                <div class="skeleton-text-short shimmer-bg"></div>
+            </div>
+            <div class="skeleton-button shimmer-bg"></div>
+        </div>`.repeat(limit || 3);
+
+        // Buscar dados
+        const results = await Promise.all(CHANNEL_IDS_TO_MONITOR.map(id =>
+            fetchFromApi(`/api/youtube?channelId=${id}&eventType=live`)
+        ));
+        let liveVideos = results.flatMap(result => result.items || []);
+        if (limit !== null) liveVideos = liveVideos.slice(0, limit);
+
+        if (liveVideos.length === 0) {
+            if (section) section.style.display = 'none';
+            return;
+        }
+
+        if (title) title.innerHTML = originalTitle;
+        if (button) button.innerHTML = originalButton;
+
+        // Buscar logos
+        const channelIds = liveVideos.map(v => v.snippet.channelId);
+        const logoData = await fetchFromApi(`/api/channels?ids=${channelIds.join(',')}`);
+        const logoMap = new Map();
+        if (logoData.items) {
+            logoData.items.forEach(channel =>
+                logoMap.set(channel.id, channel.snippet.thumbnails.default.url)
+            );
+        }
+
+        // Renderizar
+        listContainer.innerHTML = liveVideos.map(video => {
+            const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png';
+            return `<div class="live-item">
+                <div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div>
+                <div class="item-info">
+                    <h3>${video.snippet.title}</h3>
+                    <p class="channel-name">${video.snippet.channelTitle}</p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn">
+                    <i class="fas fa-circle"></i> AO VIVO
+                </a>
+            </div>`;
+        }).join('');
+    }
+
+    // ---- RENDER CONCLUÍDOS ----
+    async function renderCompletedVideos(containerSelector, limit = null) {
+        const listContainer = document.querySelector(containerSelector);
+        const section = listContainer.closest('section');
+        const header = section?.querySelector('.section-header');
+        const title = header?.querySelector('h2');
+        const button = header?.querySelector('.see-all-btn');
+
+        const originalTitle = title?.innerHTML;
+        const originalButton = button?.innerHTML;
+
+        if (title) title.innerHTML = `<span class="skeleton-title shimmer-bg"></span>`;
+        if (button) button.innerHTML = `<span class="skeleton-button-small shimmer-bg"></span>`;
+
+        // Skeleton loader
+        listContainer.innerHTML = `<div class="completed-item skeleton-item">
+            <div class="skeleton-logo shimmer-bg"></div>
+            <div class="item-info">
+                <div class="skeleton-text shimmer-bg"></div>
+                <div class="skeleton-text-short shimmer-bg"></div>
+            </div>
+            <div class="skeleton-button shimmer-bg"></div>
+        </div>`.repeat(limit || 3);
+
+        // Buscar dados
+        const results = await Promise.all(CHANNEL_IDS_TO_MONITOR.map(id =>
+            fetchFromApi(`/api/youtube?channelId=${id}&eventType=completed`)
+        ));
         let videos = results.flatMap(r => r.items || []);
-        
-        if (eventType === 'completed') {
-            videos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
-        }
-        if (limit !== null) {
-            videos = videos.slice(0, limit);
+        videos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+        if (limit !== null) videos = videos.slice(0, limit);
+
+        if (videos.length === 0) {
+            if (section) section.style.display = 'none';
+            return;
         }
 
-        // 3. RESTAURAR CABEÇALHO
-        titleElement.innerHTML = titleElement.dataset.title;
-        buttonElement.innerHTML = `Ver todos <i class="fas fa-arrow-right"></i>`;
+        if (title) title.innerHTML = originalTitle;
+        if (button) button.innerHTML = originalButton;
 
-        // 4. RENDERIZAR OU ESCONDER
-        if (videos.length > 0) {
-            const channelIds = videos.map(v => v.snippet.channelId);
-            const logoData = await fetchFromApi(`/api/channels?ids=${channelIds.join(',')}`);
-            const logoMap = new Map();
-            if (logoData.items) {
-                logoData.items.forEach(c => logoMap.set(c.id, c.snippet.thumbnails.default.url));
-            }
-            listContainer.innerHTML = videos.map(video => renderFunction(video, logoMap)).join('');
-        } else {
-            section.style.display = 'none';
+        // Buscar logos
+        const channelIds = videos.map(v => v.snippet.channelId);
+        const logoData = await fetchFromApi(`/api/channels?ids=${channelIds.join(',')}`);
+        const logoMap = new Map();
+        if (logoData.items) {
+            logoData.items.forEach(channel =>
+                logoMap.set(channel.id, channel.snippet.thumbnails.default.url)
+            );
         }
+
+        // Renderizar
+        listContainer.innerHTML = videos.map(video => {
+            const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png';
+            return `<div class="completed-item">
+                <div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div>
+                <div class="item-info">
+                    <h3>${video.snippet.title}</h3>
+                    <p class="channel-name">${video.snippet.channelTitle}</p>
+                </div>
+                <a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn">
+                    <i class="fas fa-play"></i> ASSISTIR
+                </a>
+            </div>`;
+        }).join('');
     }
 
-    // ---- FUNÇÕES DE RENDERIZAÇÃO ESPECÍFICAS ----
-    const renderLiveCard = (video, logoMap) => {
-        if (!video) return `<div class="live-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`;
-        const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png';
-        return `<div class="live-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-live-btn"><i class="fas fa-circle"></i> AO VIVO</a></div>`;
-    };
-
-    const renderCompletedCard = (video, logoMap) => {
-        if (!video) return `<div class="completed-item skeleton-item"><div class="skeleton-logo shimmer-bg"></div><div class="item-info"><div class="skeleton-text shimmer-bg"></div><div class="skeleton-text-short shimmer-bg"></div></div><div class="skeleton-button shimmer-bg"></div></div>`;
-        const logoUrl = logoMap.get(video.snippet.channelId) || 'img/placeholder.png';
-        return `<div class="completed-item"><div class="channel-logo-circle"><img src="${logoUrl}" alt="Logo ${video.snippet.channelTitle}"></div><div class="item-info"><h3>${video.snippet.title}</h3><p class="channel-name">${video.snippet.channelTitle}</p></div><a href="https://www.youtube.com/watch?v=${video.id.videoId}" target="_blank" class="watch-vod-btn"><i class="fas fa-play"></i> ASSISTIR</a></div>`;
-    };
-
-    // ---- INICIALIZAÇÃO ----
-    const currentPagePath = window.location.pathname.split('/').pop() || 'index.html';
-
-    if (currentPagePath === 'index.html') {
-        renderSection({
-            sectionId: 'live-channels-section',
-            listSelector: '.live-list',
-            eventType: 'live',
-            limit: 3,
-            skeletonCount: 1,
-            renderFunction: renderLiveCard
-        });
-        renderSection({
-            sectionId: 'completed-section',
-            listSelector: '.completed-list',
-            eventType: 'completed',
-            limit: 3,
-            skeletonCount: 1,
-            renderFunction: renderCompletedCard
-        });
+    // ---- HOME: mostrar apenas 3
+    if (document.getElementById('live-channels-section')) {
+        renderLiveVideos('#live-channels-section .live-list', 3);
+        renderCompletedVideos('#completed-section .completed-list', 3);
     }
 
-    if (currentPagePath === 'lives.html') {
-        renderSection({
-            sectionId: 'all-live-section', // Assumindo que na lives.html você tem uma section com este ID
-            listSelector: '#all-live-list', // E uma lista com este ID
-            eventType: 'live',
-            limit: null, // Sem limite
-            skeletonCount: 3, // Mostrar 3 skeletons enquanto carrega
-            renderFunction: renderLiveCard
-        });
+    // ---- LIVES.HTML (sem limite)
+    if (document.getElementById('all-live-list')) {
+        renderLiveVideos('#all-live-list');
     }
 
-    if (currentPagePath === 'concluidos.html') {
-        renderSection({
-            sectionId: 'all-completed-section', // Assumindo que na concluidos.html você tem uma section com este ID
-            listSelector: '#all-completed-list', // E uma lista com este ID
-            eventType: 'completed',
-            limit: 12,
-            skeletonCount: 3,
-            renderFunction: renderCompletedCard
-        });
+    // ---- CONCLUIDOS.HTML (limite 12)
+    if (document.getElementById('all-completed-list')) {
+        renderCompletedVideos('#all-completed-list', 6);
     }
 });
