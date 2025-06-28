@@ -58,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const listContainer = document.querySelector(containerSelector);
         const section = listContainer.closest('section');
 
+        // Seleciona os elementos do cabeçalho
+        const titleElement = section.querySelector('h2');
+        const buttonElement = section.querySelector('.see-all-btn');
+
         // Skeleton loader
         listContainer.innerHTML = `<div class="live-item skeleton-item">
             <div class="skeleton-logo shimmer-bg"></div>
@@ -74,6 +78,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ));
         let liveVideos = results.flatMap(result => result.items || []);
         if (limit !== null) liveVideos = liveVideos.slice(0, limit);
+
+        // Restaura o cabeçalho, aconteça o que acontecer
+        titleElement.innerHTML = originalTitle;
+        buttonElement.innerHTML = originalButton;
 
         if (liveVideos.length === 0) {
             if (section) section.style.display = 'none';
@@ -111,6 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const listContainer = document.querySelector(containerSelector);
         const section = listContainer.closest('section');
 
+        // Seleciona os elementos do cabeçalho
+        const titleElement = section.querySelector('h2');
+        const buttonElement = section.querySelector('.see-all-btn');
+
         // Skeleton loader
         listContainer.innerHTML = `<div class="completed-item skeleton-item">
             <div class="skeleton-logo shimmer-bg"></div>
@@ -128,6 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let videos = results.flatMap(r => r.items || []);
         videos.sort((a, b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
         if (limit !== null) videos = videos.slice(0, limit);
+
+        // Restaura o cabeçalho, aconteça o que acontecer
+        titleElement.innerHTML = originalTitle;
+        buttonElement.innerHTML = originalButton;
 
         if (videos.length === 0) {
             if (section) section.style.display = 'none';
