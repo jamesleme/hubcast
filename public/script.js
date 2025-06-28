@@ -173,15 +173,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. INICIALIZAÇÃO
-    if (currentPage.includes('/lives.html')) {
-        // Na página de lives, só precisamos rodar a função de lives
-        initializeLiveSection();
-    } else if (currentPage.includes('/concluidos.html')) {
-        // Na página de concluídos, só a de concluídos
-        initializeCompletedSection();
-    } else {
-        // Na home page (e outras), rodamos as duas
-        initializeLiveSection();
-        initializeCompletedSection();
+    // Lógica para a Página Principal (index.html ou /)
+    // A condição verifica se estamos na raiz ou no index.html
+    if (currentPagePath === '/' || currentPagePath.endsWith('/index.html') || currentPagePath === '') {
+        if (document.getElementById('live-channels-section')) {
+            initializeLiveSection();
+        }
+        if (document.getElementById('completed-section')) {
+            initializeCompletedSection();
+        }
+    }
+
+    // Lógica para a Página de Todas as Lives
+    if (currentPagePath.includes('/lives.html')) {
+        if (document.getElementById('live-channels-section')) {
+            initializeLiveSection();
+        }
+        // Não chamamos a de concluídos aqui
+    }
+
+    // Lógica para a Página de Todos os Concluídos
+    if (currentPagePath.includes('/concluidos.html')) {
+        if (document.getElementById('completed-section')) {
+            initializeCompletedSection();
+        }
+        // Não chamamos a de lives aqui
     }
 });
