@@ -28,6 +28,24 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', newTheme);
     });
 
+    // ---- LÓGICA DO SELETOR DE IDIOMA LOCAL ----
+    const langSwitchContainer = document.querySelector('.local-lang-switch');
+
+    if (langSwitchContainer) {
+        const langButtons = langSwitchContainer.querySelectorAll('[data-lang-btn]');
+        const langSections = document.querySelectorAll('[data-lang-section]');
+
+        langButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedLang = button.dataset.langBtn;
+                langButtons.forEach(btn => btn.classList.remove('active'));
+                langSections.forEach(sec => sec.classList.remove('lang-active'));
+                button.classList.add('active');
+                document.querySelector(`[data-lang-section="${selectedLang}"]`).classList.add('lang-active');
+            });
+        });
+    }
+
     // ---- ANO DO RODAPÉ ----
     const yearSpan = document.getElementById('current-year');
     if (yearSpan) {
