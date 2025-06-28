@@ -54,8 +54,22 @@ body.dark-mode {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--bg-primary); color: var(--text-primary); font-family: 'Sen', sans-serif; line-height: 1.6; transition: background-color 0.3s ease, color 0.3s ease; }
+
+html { height: 100%; }
+
+body { 
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-primary); 
+    color: var(--text-primary); 
+    font-family: 'Sen', sans-serif; 
+    line-height: 1.6; transition: background-color 0.3s ease, color 0.3s ease; 
+}
+
 .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+main.container { flex-grow: 1; }
 
 /* ---- CABEÇALHO E NAVEGAÇÃO (MODIFICADO) ---- */
 .main-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
