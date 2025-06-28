@@ -173,6 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- CONCLUIDOS.HTML (limite 12)
     if (document.getElementById('all-completed-list')) {
-        renderCompletedVideos('#all-completed-list', 12);
+        renderCompletedVideos('#all-completed-list', 6);
     }
 });
