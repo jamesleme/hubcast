@@ -134,13 +134,59 @@ main.container { flex-grow: 1; }
 /* ============================================== */
 .main-content-wrapper {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 300px; /* Coluna principal flexível e sidebar com largura fixa */
+    grid-template-columns: minmax(790px, 1fr) 300px; /* Coluna principal flexível e sidebar com largura fixa */
     gap: 70px;
     align-items: flex-start; /* Esta propriedade agora não vai mais atrapalhar */
 }
 
 .sidebar-column h2 {
     font-size: 18px;
+}
+
+/* ==== ESTILOS DA AGENDA NA SIDEBAR ==== */
+/* Quando a lista de agenda está na sidebar, removemos a margem grande */
+.sidebar-column .upcoming-list {
+    margin: 20px 0;
+    gap: 20px; /* Reduz o espaçamento entre os itens */
+}
+
+/* O seletor .sidebar-column .upcoming-item garante que este estilo SÓ se aplica
+   quando o item está dentro da sidebar. */
+.sidebar-column .upcoming-item {
+    /* Muda o layout para empilhado e remove o skew */
+    flex-direction: column;
+    align-items: flex-start; /* Alinha tudo à esquerda */
+    transform: none; /* Remove o efeito de skew que não cabe na sidebar */
+    padding: 20px; /* Reduz o padding interno */
+    gap: 15px;
+    box-shadow: -7px 7px 0 1px var(--card-shadow);
+}
+
+/* Oculta a logo do canal na sidebar para economizar espaço */
+.sidebar-column .upcoming-item .channel-logo-circle {
+    display: none;
+}
+
+/* Ajusta o espaçamento e o alinhamento da data/horário */
+.sidebar-column .upcoming-item .item-schedule {
+    margin-left: 0; /* Remove a margem automática */
+    padding-left: 0; /* Remove o padding */
+    width: 100%;
+    margin-top: 10px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+}
+
+/* Deixa o título do episódio menor na sidebar */
+.sidebar-column .upcoming-item .item-info h3 {
+    font-size: 1rem; /* Tamanho do título reduzido */
+    line-height: 1.4;
+}
+
+/* Ajusta o título da seção na sidebar */
+.sidebar-column #upcoming-section .section-header h2 {
+    font-size: 18px; /* Mantém o mesmo tamanho dos outros títulos da sidebar */
+    padding-bottom: 5px;
 }
 
 /* ============================================== */
