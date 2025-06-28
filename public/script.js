@@ -52,9 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- LÓGICA DA API (REESTRUTURADA PARA ISOLAMENTO TOTAL) ----
 
+    const currentPage = window.location.pathname; // Pega o caminho, ex: "/lives.html"
+
     // 1. CONFIGURAÇÃO
-    const MAX_LIVES_TO_SHOW = 3;
-    const MAX_COMPLETED_TO_SHOW = 3;
+    const MAX_LIVES_TO_SHOW = currentPage.includes('/lives.html') ? 12 : 3;
+    const MAX_COMPLETED_TO_SHOW = currentPage.includes('/concluidos.html') ? 12 : 3;
     const SKELETONS_TO_SHOW = 1; // <-- NOVA CONSTANTE PARA CONTROLAR OS SKELETONS
 
     const CHANNEL_IDS_TO_MONITOR = [
@@ -171,7 +173,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. INICIALIZAÇÃO
-    if (document.getElementById('live-channels-section')) {
+    if (currentPage.includes('/lives.html')) {
+        // Na página de lives, só precisamos rodar a função de lives
+        initializeLiveSection();
+    } else if (currentPage.includes('/concluidos.html')) {
+        // Na página de concluídos, só a de concluídos
+        initializeCompletedSection();
+    } else {
+        // Na home page (e outras), rodamos as duas
         initializeLiveSection();
         initializeCompletedSection();
     }
