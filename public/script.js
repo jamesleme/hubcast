@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- VARIÁVEIS ----
     const CHANNEL_IDS_TO_MONITOR = [
-        'UCK7bm74oRVnp_PXDfF2S1sA', // mount
+        'UCs-6sCz2LJm1PrWQN4ErsPw', // tnt
+        'UCxERJM046RIRgl5cH-ss3yw', // CNN
     ];
 
     // ---- API UNIVERSAL ----
