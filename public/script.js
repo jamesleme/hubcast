@@ -52,11 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- LÓGICA DA API (REESTRUTURADA PARA ISOLAMENTO TOTAL) ----
 
-    const currentPage = window.location.pathname; // Pega o caminho, ex: "/lives.html"
-
     // 1. CONFIGURAÇÃO
-    const MAX_LIVES_TO_SHOW = currentPage.includes('/lives.html') ? 12 : 3;
-    const MAX_COMPLETED_TO_SHOW = currentPage.includes('/concluidos.html') ? 12 : 3;
+    const MAX_LIVES_TO_SHOW = 3;
+    const MAX_COMPLETED_TO_SHOW = 3;
     const SKELETONS_TO_SHOW = 1; // <-- NOVA CONSTANTE PARA CONTROLAR OS SKELETONS
 
     const CHANNEL_IDS_TO_MONITOR = [
@@ -173,30 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. INICIALIZAÇÃO
-    // Lógica para a Página Principal (index.html ou /)
-    // A condição verifica se estamos na raiz ou no index.html
-    if (currentPagePath === '/' || currentPagePath.endsWith('/index.html') || currentPagePath === '') {
-        if (document.getElementById('live-channels-section')) {
-            initializeLiveSection();
-        }
-        if (document.getElementById('completed-section')) {
-            initializeCompletedSection();
-        }
-    }
-
-    // Lógica para a Página de Todas as Lives
-    if (currentPagePath.includes('/lives.html')) {
-        if (document.getElementById('live-channels-section')) {
-            initializeLiveSection();
-        }
-        // Não chamamos a de concluídos aqui
-    }
-
-    // Lógica para a Página de Todos os Concluídos
-    if (currentPagePath.includes('/concluidos.html')) {
-        if (document.getElementById('completed-section')) {
-            initializeCompletedSection();
-        }
-        // Não chamamos a de lives aqui
+    if (document.getElementById('live-channels-section')) {
+        initializeLiveSection();
+        initializeCompletedSection();
     }
 });
