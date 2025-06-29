@@ -2,23 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarListContainer = document.querySelector('.upcoming-list-sidebar');
     
     if (!sidebarListContainer) {
-        return; // Sai se não estiver na página correta
+        return; // Sai se não estiver na página da home
     }
 
-    // Passo 1: Mostrar um estado de carregamento imediatamente
+    // Mostra um estado de carregamento
     sidebarListContainer.innerHTML = '<p class="loading-agenda">Carregando agenda...</p>';
 
     async function fetchAndDisplayUpcoming() {
         try {
             const response = await fetch('agenda.html');
             if (!response.ok) {
-                throw new Error('Não foi possível carregar a página da agenda.');
+                throw new Error(`Não foi possível carregar agenda.html (status: ${response.status})`);
             }
             const agendaHtmlText = await response.text();
 
             const parser = new DOMParser();
             const agendaDoc = parser.parseFromString(agendaHtmlText, 'text/html');
 
+            // Encontra os itens na página da agenda
             const upcomingItems = agendaDoc.querySelectorAll('.upcoming-item');
             const top3Items = Array.from(upcomingItems).slice(0, 3);
             
@@ -27,26 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            let sidebarHtml = '';
-            top3Items.forEach(item => {
-                const imgSrc = item.querySelector('img')?.src || '';
-                const channelName = item.querySelector('.channel-name')?.textContent || '';
-                const title = item.querySelector('h3')?.textContent || '';
-                const scheduleHTML = item.querySelector('.item-schedule')?.innerHTML || '';
+            // Limpa o container
+            sidebarListContainer.innerHTML = '';
 
-                sidebarHtml += `
-                    <a href="agenda.html" class="upcoming-item-sidebar">
-                        <img src="${imgSrc}" alt="${channelName}">
-                        <div class="sidebar-item-info">
-                            <h4>${title}</h4>
-                            <p>${channelName}</p>
-                            <div class="item-schedule">${scheduleHTML}</div>
-                        </div>
-                    </a>
-                `;
+            // Itera sobre os 3 primeiros itens e os adiciona à sidebar
+            top3Items.forEach(itemNode => {
+                // Cria um link para envolver o card
+                const link = document.createElement('a');
+                link.href = 'agenda.html';
+                link.style.textDecoration = 'none';
+                link.style.color = 'inherit';
+
+                // Adiciona o HTML do item original dentro do link.
+                // O CSS contextual (.sidebar-column .upcoming-item) fará o resto.
+                link.appendChild(itemNode.cloneNode(true));
+                
+                sidebarListContainer.appendChild(link);
             });
-
-            sidebarListContainer.innerHTML = sidebarHtml;
 
         } catch (error) {
             console.error("Erro ao carregar a agenda na sidebar:", error);
