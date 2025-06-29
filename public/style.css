@@ -427,8 +427,6 @@ main.container { flex-grow: 1; }
     box-shadow: -7px 7px 0 1px var(--card-shadow);
 }
 
-.sidebar-column h2 { margin-top: 7px; }
-
 .category-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
 .category-list a {
     display: flex;
