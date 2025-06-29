@@ -1,0 +1,29 @@
+<!-- Em sitemap.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://hubcast.vercel.app/</loc>
+    <lastmod>2025-06-29</lastmod>
+    <priority>1.00</priority>
+  </url>
+  <url>
+    <loc>https://hubcast.vercel.app/agenda.html</loc>
+    <lastmod>2025-06-29</lastmod>
+    <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://hubcast.vercel.app/contato.html</loc>
+    <lastmod>2025-06-29</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://hubcast.vercel.app/termos.html</loc>
+    <lastmod>2025-06-29</lastmod>
+    <priority>0.50</priority>
+  </url>
+  <url>
+    <loc>https://hubcast.vercel.app/privacidade.html</loc>
+    <lastmod>2025-06-29</lastmod>
+    <priority>0.50</priority>
+  </url>
+</urlset>
