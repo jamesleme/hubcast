@@ -25,8 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (diffDays === 1) {
             return `AMANHÃ - ${time}`;
         } else if (diffDays > 1) {
-            // Formata a data para "DD de Mês"
-            const day = eventDate.getDate(); // Usa getDate() para o dia local
+            const day = eventDate.getDate();
             const month = eventDate.toLocaleString('pt-BR', { month: 'long' });
             return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)} - ${time}`;
         } else {
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return; // Sai se não estiver na página da home
     }
 
-    // Mostra um estado de carregamento
     sidebarListContainer.innerHTML = '<p class="loading-agenda">Carregando agenda...</p>';
 
     async function fetchAndDisplayUpcoming() {
@@ -57,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const allUpcomingItems = agendaDoc.querySelectorAll('.upcoming-item');
             const now = new Date();
             
-            // Filtra para pegar apenas os itens futuros
             const futureItems = Array.from(allUpcomingItems).filter(item => {
                 const itemDatetimeStr = item.dataset.datetime;
                 if (!itemDatetimeStr) return false;
@@ -75,23 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa o container
             sidebarListContainer.innerHTML = '';
 
-            // Itera sobre os 3 primeiros itens, formata o texto e os adiciona à sidebar
+            // =========================================================
+            // ALTERAÇÃO APLICADA AQUI
+            // =========================================================
             top3FutureItems.forEach(itemNode => {
+                // Formata o texto da data antes de clonar
                 const datetime = itemNode.dataset.datetime;
                 const scheduleSpan = itemNode.querySelector('.item-schedule span');
                 if (scheduleSpan && datetime) {
                     scheduleSpan.textContent = formatScheduleText(datetime);
                 }
 
-                // Cria o link e adiciona o card clonado dentro dele
-                const link = document.createElement('a');
-                link.href = 'agenda.html';
-                link.style.textDecoration = 'none';
-                link.style.color = 'inherit';
-                link.appendChild(itemNode.cloneNode(true));
-                
-                sidebarListContainer.appendChild(link);
+                // Clona o nó do item e o adiciona DIRETAMENTE ao container, sem o link <a>
+                const clonedItem = itemNode.cloneNode(true);
+                sidebarListContainer.appendChild(clonedItem);
             });
+            // =========================================================
 
         } catch (error) {
             console.error("Erro ao carregar a agenda na sidebar:", error);
