@@ -54,8 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---- VARIÁVEIS ----
     const CHANNEL_IDS_TO_MONITOR = [
-        'UCs-6sCz2LJm1PrWQN4ErsPw', // tnt
-        'UCxERJM046RIRgl5cH-ss3yw', // CNN
+        'UC4_bL9_p3s01K_T1aG8m1dA', // Podpah
+        'UCp2tjaqW3S3pP_2J3qS_zaA', // Venus Podcast
+        'UCoB84QGiiwV3c01m_G34S7A', // Ticaracaticast
+        'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
+        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sport CLub
+        'UC9djCiv4e85Kd8G--GWlcoQ', // Ciencia Sem Fim
+        'UCWZoPPW7u2I4gZfhJBZ6NqQ', // Inteligência Ltda
     ];
 
     // ---- API UNIVERSAL ----
