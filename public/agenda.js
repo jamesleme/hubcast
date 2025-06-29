@@ -1,23 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /**
-     * Formata uma data ISO em um texto amigável (HOJE, AMANHÃ, ou DD de Mês).
-     * @param {string} dateString - A data no formato ISO (ex: "2024-06-22T22:00:00Z").
+     * Formata uma data ISO em um texto amigável (HOJE, AMANHÃ, ou DD de Mês),
+     * adaptando-se ao fuso horário local do usuário.
+     * @param {string} dateString - A data no formato ISO UTC (ex: "2024-07-03T23:00:00Z").
      * @returns {string} - O texto formatado.
      */
     function formatScheduleText(dateString) {
         const now = new Date();
         const eventDate = new Date(dateString);
 
-        // Zera a hora, minuto e segundo para comparar apenas os dias (baseado em UTC para consistência)
-        const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-        const eventDay = new Date(Date.UTC(eventDate.getUTCFullYear(), eventDate.getUTCMonth(), eventDate.getUTCDate()));
+        // Zera a hora para comparar apenas os dias, usando o fuso local do navegador
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const eventDay = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
         
         const diffTime = eventDay - today;
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        // Pega a hora e minuto no fuso horário local do navegador
-        const time = eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+        // Pega a hora e minuto convertidos para o fuso horário local do usuário
+        const time = eventDate.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
         if (diffDays === 0) {
             return `HOJE - ${time}`;
@@ -25,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return `AMANHÃ - ${time}`;
         } else if (diffDays > 1) {
             // Formata a data para "DD de Mês"
-            const day = eventDate.getUTCDate();
-            const month = eventDate.toLocaleString('pt-BR', { month: 'long', timeZone: 'UTC' });
+            const day = eventDate.getDate(); // Usa getDate() para o dia local
+            const month = eventDate.toLocaleString('pt-BR', { month: 'long' });
             return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)} - ${time}`;
         } else {
             return `Evento encerrado`;
@@ -82,8 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     scheduleSpan.textContent = formatScheduleText(datetime);
                 }
 
-                const clonedItem = itemNode.cloneNode(true);
-                sidebarListContainer.appendChild(clonedItem);
+                // Cria o link e adiciona o card clonado dentro dele
+                const link = document.createElement('a');
+                link.href = 'agenda.html';
+                link.style.textDecoration = 'none';
+                link.style.color = 'inherit';
+                link.appendChild(itemNode.cloneNode(true));
+                
+                sidebarListContainer.appendChild(link);
             });
 
         } catch (error) {
