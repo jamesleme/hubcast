@@ -44,6 +44,22 @@
      </script>
 
     <script type="application/ld+json">
+    {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "hubcast.",
+    "url": "https://hubcast.vercel.app/",
+    "description": "Encontre as lives dos principais podcasts em um só lugar. Acompanhe a agenda, os episódios concluídos e descubra novos canais.",
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://hubcast.vercel.app/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+    }
+    }
+    </script>
 </head>
 <body>
 
