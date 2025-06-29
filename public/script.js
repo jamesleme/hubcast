@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'UCp2tjaqW3S3pP_2J3qS_zaA', // Venus Podcast
         'UCoB84QGiiwV3c01m_G34S7A', // Ticaracaticast
         'UC4K-979s9ltJPROmH-eYkiA', // Flow Podcast
-        'UCk107Q3h57M3G1_d2Q3E1DQ', // Flow Sport CLub
+        'UC5-aueB1RqpUc-EeAjtx9Lw', // Flow Sport CLub
         'UC9djCiv4e85Kd8G--GWlcoQ', // Ciencia Sem Fim
         'UCWZoPPW7u2I4gZfhJBZ6NqQ', // Inteligência Ltda
     ];
