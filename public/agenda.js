@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return; // Sai se não estiver na página da home
     }
 
-    // Mostra um estado de carregamento
     sidebarListContainer.innerHTML = '<p class="loading-agenda">Carregando agenda...</p>';
 
     async function fetchAndDisplayUpcoming() {
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const parser = new DOMParser();
             const agendaDoc = parser.parseFromString(agendaHtmlText, 'text/html');
 
-            // Encontra os itens na página da agenda
             const upcomingItems = agendaDoc.querySelectorAll('.upcoming-item');
             const top3Items = Array.from(upcomingItems).slice(0, 3);
             
@@ -31,19 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa o container
             sidebarListContainer.innerHTML = '';
 
-            // Itera sobre os 3 primeiros itens e os adiciona à sidebar
+            // Itera sobre os 3 primeiros itens
             top3Items.forEach(itemNode => {
-                // Cria um link para envolver o card
-                const link = document.createElement('a');
-                link.href = 'agenda.html';
-                link.style.textDecoration = 'none';
-                link.style.color = 'inherit';
+                // Clona o nó do item da agenda
+                const clonedItem = itemNode.cloneNode(true);
 
-                // Adiciona o HTML do item original dentro do link.
-                // O CSS contextual (.sidebar-column .upcoming-item) fará o resto.
-                link.appendChild(itemNode.cloneNode(true));
-                
-                sidebarListContainer.appendChild(link);
+                // Adiciona o clone DIRETAMENTE ao container da sidebar.
+                // Agora, o `gap` definido no CSS para .upcoming-list-sidebar vai funcionar.
+                sidebarListContainer.appendChild(clonedItem);
             });
 
         } catch (error) {
