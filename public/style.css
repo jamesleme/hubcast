@@ -281,7 +281,7 @@ main.container { flex-grow: 1; }
 .upcoming-item img { width: 120px; height: 68px; object-fit: cover; flex-shrink: 0; display: block; border-radius: 8px; }
 .item-info { flex-grow: 1; }
 .item-info h3 { font-size: 1.1rem; font-weight: 600; color: var(--text-primary); }
-.item-schedule { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 1.1rem; color: var(--accent-cyan); white-space: nowrap; margin-left: auto; padding-left: 20px; }
+.item-schedule { display: flex; align-items: center; gap: 10px; text-transform: uppercase; font-weight: 600; font-size: 1.1rem; color: var(--accent-cyan); white-space: nowrap; margin-left: auto; padding-left: 20px; }
 
 /* ============================================== */
 /* ==== LISTA AGENDA (ESTILOS SEPARADOS) ==== */
