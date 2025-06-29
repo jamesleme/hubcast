@@ -141,7 +141,7 @@ main.container { flex-grow: 1; }
 
 .sidebar-column {
     display: grid;
-    gap: 70px;
+    gap: 30px;
 }
 
 .sidebar-column h2 { font-size: 18px; }
