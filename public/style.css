@@ -139,9 +139,12 @@ main.container { flex-grow: 1; }
     align-items: flex-start; /* Esta propriedade agora não vai mais atrapalhar */
 }
 
-.sidebar-column h2 {
-    font-size: 18px;
+.sidebar-column {
+    display: grid;
+    gap: 70px;
 }
+
+.sidebar-column h2 { font-size: 18px; }
 
 /* ==== ESTILOS DA AGENDA NA SIDEBAR ==== */
 
