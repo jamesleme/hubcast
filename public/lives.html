@@ -15,6 +15,16 @@
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1662899401865436"
      crossorigin="anonymous"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NV463VN1LJ"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NV463VN1LJ');
+    </script>
 </head>
 <body>
 
@@ -68,18 +78,16 @@
 
             <!-- COLUNA LATERAL (DIREITA) - SIDEBAR -->
                 <aside class="sidebar-column">
-                        <h2>por categoria</h2>
-                        <section id="categories-section">
-                            <ul class="category-list">
-                                <li><a href="#"><span><i class="fas fa-laugh-beam"></i>Comédia</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="fas fa-newspaper"></i>Notícias</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="fas fa-microchip"></i>Tecnologia</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="fas fa-flask"></i>Ciência</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="fas fa-futbol"></i>Esportes</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="bi bi-dpad-fill"></i>Entretenimento</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                                <li><a href="#"><span><i class="fas fa-briefcase"></i>Negócios</span><i class="fas fa-arrow-right category-arrow"></i></a></li>
-                            </ul>
-                        </section>
+                <!-- Seção AGENDA -->
+                <section id="upcoming-section-sidebar">
+                    <div class="section-header">
+                        <h2>proximos episodios</h2>
+                        <a href="agenda.html" class="see-all-btn">Ver todos <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    <div class="upcoming-list-sidebar">
+                        <!-- Os 3 próximos episódios serão inseridos aqui pelo agenda.js -->
+                    </div>
+                </section>
 
                         <!-- Seção PODCASTS POPULARES -->
                         <section id="popular-section">
@@ -121,7 +129,6 @@
                     </nav>
                     <div class="footer-social">
                         <a href="#" title="Twitter / X"><i class="fab fa-twitter"></i></a>
-                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="https://github.com/jamesleme/hubcast" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
                     </div>
                 </div>
