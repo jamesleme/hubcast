@@ -1,28 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const loadComponent = (selector, filePath) => {
+    const loadComponent = async (selector, filePath) => {
         const element = document.querySelector(selector);
         if (element) {
-            fetch(filePath)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Não foi possível carregar o componente: ${filePath}`);
-                    }
-                    return response.text();
-                })
-                .then(html => {
-                    element.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error(error);
-                    element.innerHTML = `<p style="color: red; text-align: center;">Erro ao carregar componente.</p>`;
-                });
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`Componente não encontrado: ${filePath}`);
+                const html = await response.text();
+                element.innerHTML = html;
+            } catch (error) {
+                console.error(error);
+                element.innerHTML = `<p style="color: red; text-align: center;">Erro ao carregar componente.</p>`;
+            }
         }
     };
 
-    // Carrega o rodapé em todas as páginas que tiverem o placeholder
-    loadComponent('footer.main-footer-container', 'footer.html');
+    // Cria uma lista de todas as tarefas de carregamento
+    const componentLoadTasks = [
+        loadComponent('header.main-header', 'header.html'),
+        loadComponent('footer.main-footer-container', 'footer.html')
+    ];
 
-    // Carrega o header em todas as páginas que tiverem o placeholder
-    loadComponent('header.main-header', 'header.html');
+    // Espera que TODAS as tarefas terminem
+    Promise.all(componentLoadTasks).then(() => {
+        // Quando terminar, dispara um evento personalizado
+        console.log("Componentes globais carregados.");
+        document.dispatchEvent(new Event('componentsLoaded'));
+    });
 });
