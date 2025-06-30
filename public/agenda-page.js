@@ -40,23 +40,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const allItems = upcomingList.querySelectorAll('.upcoming-item');
     const now = new Date();
 
+    // ORDENAÇÃO
+    allItems.sort((a, b) => {
+        const dateA = new Date(a.dataset.datetime);
+        const dateB = new Date(b.dataset.datetime);
+        return dateA - dateB; // Ordena do mais próximo para o mais distante no futuro
+    });
+
+    // Limpa a lista atual para reinserir os itens na ordem correta
+    upcomingList.innerHTML = ''; 
+
     let futureEventsFound = false;
 
     allItems.forEach(item => {
         const itemDatetimeStr = item.dataset.datetime;
         if (itemDatetimeStr) {
             const itemDate = new Date(itemDatetimeStr);
-            if (itemDate <= now) {
-                // Se o evento já passou, remove o elemento da página
-                item.remove();
-            } else {
-                // Se o evento está no futuro, atualiza o texto e marca que encontramos eventos
+            if (itemDate > now) {
+                // Se o evento está no futuro, o processamos
                 futureEventsFound = true;
                 const scheduleSpan = item.querySelector('.item-schedule span');
                 if (scheduleSpan) {
                     scheduleSpan.textContent = formatScheduleText(itemDatetimeStr);
                 }
+                // Adiciona o item ordenado de volta à lista
+                upcomingList.appendChild(item);
             }
+            // Itens que já passaram são simplesmente ignorados e não são adicionados de volta
         }
     });
 
