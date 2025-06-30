@@ -23,6 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Carrega o rodapé em todas as páginas que tiverem o placeholder
     loadComponent('footer.main-footer-container', 'footer.html');
 
-    // Opcional: Você pode fazer o mesmo para o cabeçalho se quiser!
-    // loadComponent('header.main-header', 'header.html');
+    // Carrega o header em todas as páginas que tiverem o placeholder
+    loadComponent('header.main-header', 'header.html');
 });
