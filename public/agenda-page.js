@@ -25,10 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (diffDays === 1) {
             return `AMANHÃ - ${time}`;
         } else if (diffDays > 1) {
-            // Formata a data para "DD de Mês"
             const day = eventDate.getDate(); // Usa getDate() para o dia local
             const month = eventDate.toLocaleString('pt-BR', { month: 'long' });
-            return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)} - ${time}`;
+            return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)}`; // Removido o tempo para datas futuras
         } else {
             return `Evento encerrado`;
         }
@@ -37,10 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const upcomingList = document.querySelector('.upcoming-list');
     if (!upcomingList) return; // Sai se não estiver na página da agenda
 
-    const allItems = upcomingList.querySelectorAll('.upcoming-item');
+    // Converte a coleção de itens em um array para podermos ordenar
+    const allItems = Array.from(upcomingList.querySelectorAll('.upcoming-item'));
     const now = new Date();
 
-    // ORDENAÇÃO
+    // Ordena todos os itens pela data antes de fazer qualquer outra coisa
     allItems.sort((a, b) => {
         const dateA = new Date(a.dataset.datetime);
         const dateB = new Date(b.dataset.datetime);
@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let futureEventsFound = false;
 
+    // Itera sobre a lista já ordenada
     allItems.forEach(item => {
         const itemDatetimeStr = item.dataset.datetime;
         if (itemDatetimeStr) {
@@ -70,8 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Se, após a filtragem, não sobrar nenhum evento futuro, exibe uma mensagem
-    if (!futureEventsFound && allItems.length > 0) {
+    // Se, após a filtragem e ordenação, não sobrar nenhum evento futuro, exibe uma mensagem
+    if (!futureEventsFound) {
         upcomingList.innerHTML = '<p class="no-events-message">Nenhum episódio agendado no momento.</p>';
     }
 });

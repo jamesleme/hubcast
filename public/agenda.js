@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (diffDays > 1) {
             const day = eventDate.getDate();
             const month = eventDate.toLocaleString('pt-BR', { month: 'long' });
-            return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)} - ${time}`;
+            return `${day} de ${month.charAt(0).toUpperCase() + month.slice(1)}`; // Removido o tempo para datas futuras
         } else {
             return `Evento encerrado`;
         }
@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return; // Sai se não estiver na página da home
     }
 
+    // Mostra um estado de carregamento
     sidebarListContainer.innerHTML = '<p class="loading-agenda">Carregando agenda...</p>';
 
     async function fetchAndDisplayUpcoming() {
@@ -52,14 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const parser = new DOMParser();
             const agendaDoc = parser.parseFromString(agendaHtmlText, 'text/html');
 
-            const allUpcomingItems = agendaDoc.querySelectorAll('.upcoming-item');
+            const allUpcomingItems = Array.from(agendaDoc.querySelectorAll('.upcoming-item'));
             const now = new Date();
             
-            const futureItems = Array.from(allUpcomingItems).filter(item => {
+            // Filtra para pegar apenas os itens futuros
+            let futureItems = allUpcomingItems.filter(item => {
                 const itemDatetimeStr = item.dataset.datetime;
                 if (!itemDatetimeStr) return false;
                 const itemDate = new Date(itemDatetimeStr);
                 return itemDate > now;
+            });
+
+            // Ordena os itens futuros pela data
+            futureItems.sort((a, b) => {
+                const dateA = new Date(a.dataset.datetime);
+                const dateB = new Date(b.dataset.datetime);
+                return dateA - dateB; // Ordena do mais próximo para o mais distante
             });
 
             const top3FutureItems = futureItems.slice(0, 3);
@@ -72,22 +81,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Limpa o container
             sidebarListContainer.innerHTML = '';
 
-            // =========================================================
-            // ALTERAÇÃO APLICADA AQUI
-            // =========================================================
+            // Itera sobre os 3 primeiros itens, formata o texto e os adiciona à sidebar
             top3FutureItems.forEach(itemNode => {
-                // Formata o texto da data antes de clonar
                 const datetime = itemNode.dataset.datetime;
                 const scheduleSpan = itemNode.querySelector('.item-schedule span');
                 if (scheduleSpan && datetime) {
                     scheduleSpan.textContent = formatScheduleText(datetime);
                 }
 
-                // Clona o nó do item e o adiciona DIRETAMENTE ao container, sem o link <a>
+                // Adiciona o nó clonado diretamente, sem link
                 const clonedItem = itemNode.cloneNode(true);
                 sidebarListContainer.appendChild(clonedItem);
             });
-            // =========================================================
 
         } catch (error) {
             console.error("Erro ao carregar a agenda na sidebar:", error);
